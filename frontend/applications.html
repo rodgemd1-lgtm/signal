@@ -160,198 +160,569 @@ body{background:var(--bg-void)}
     </div>
 
     <!-- Card List -->
-    <div class="card-list" id="cardList">
-
-      <!-- Interviewing -->
-      <div class="app-card" data-status="interviewing">
-        <div class="status-bar status-interviewing"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-title">Chief AI Officer</div>
-              <div class="card-company">CareNet Health Systems</div>
-              <div class="card-meta">
-                <span><strong>Remote</strong></span>
-                <span>$280K — $340K</span>
-                <span>Applied 12 days ago</span>
-              </div>
-              <div class="stage-dots">
-                <div class="stage-dot active"></div>
-                <div class="stage-dot active"></div>
-                <div class="stage-dot interviewing active"></div>
-                <div class="stage-dot"></div>
-                <div class="stage-dot"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-right">
-          <div class="fit-score hi">89%</div>
-          <div class="status-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)">Interviewing</div>
-        </div>
-      </div>
-
-      <div class="app-card" data-status="interviewing">
-        <div class="status-bar status-interviewing"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-title">VP of AI Strategy</div>
-              <div class="card-company">HealthTech Systems</div>
-              <div class="card-meta">
-                <span><strong>Remote</strong></span>
-                <span>$240K — $340K</span>
-                <span>Applied 5 days ago</span>
-              </div>
-              <div class="stage-dots">
-                <div class="stage-dot active"></div>
-                <div class="stage-dot active"></div>
-                <div class="stage-dot interviewing active"></div>
-                <div class="stage-dot"></div>
-                <div class="stage-dot"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-right">
-          <div class="fit-score hi">92%</div>
-          <div class="status-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)">Interviewing</div>
-        </div>
-      </div>
-
-      <!-- Applied -->
-      <div class="app-card" data-status="applied">
-        <div class="status-bar status-interested"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-title">Director of AI Products</div>
-              <div class="card-company">MedMind AI</div>
-              <div class="card-meta">
-                <span><strong>Hybrid</strong></span>
-                <span>$180K — $240K</span>
-                <span>Applied 8 days ago</span>
-              </div>
-              <div class="stage-dots">
-                <div class="stage-dot active"></div>
-                <div class="stage-dot active"></div>
-                <div class="stage-dot"></div>
-                <div class="stage-dot"></div>
-                <div class="stage-dot"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-right">
-          <div class="fit-score mid">81%</div>
-          <div class="status-badge" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)">Applied</div>
-        </div>
-      </div>
-
-      <div class="app-card" data-status="applied">
-        <div class="status-bar status-interested"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-title">Senior AI Product Manager</div>
-              <div class="card-company">BrightPath Ventures</div>
-              <div class="card-meta">
-                <span><strong>Remote</strong></span>
-                <span>$160K — $200K</span>
-                <span>Applied 3 days ago</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-right">
-          <div class="fit-score mid">74%</div>
-          <div class="status-badge" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)">In Review</div>
-        </div>
-      </div>
-
-      <div class="app-card" data-status="applied">
-        <div class="status-bar"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-title">AI Strategy Consultant</div>
-              <div class="card-company">McKinley Partners</div>
-              <div class="card-meta">
-                <span><strong>Remote</strong></span>
-                <span>$200/hr</span>
-                <span>Applied 2 days ago</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-right">
-          <div class="fit-score hi">86%</div>
-          <div class="status-badge" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)">Applied</div>
-        </div>
-      </div>
-
-      <div class="app-card" data-status="applied">
-        <div class="status-bar"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-title">Head of AI Implementation</div>
-              <div class="card-company">Clara Health</div>
-              <div class="card-meta">
-                <span><strong>Hybrid</strong></span>
-                <span>$200K — $260K</span>
-                <span>Applied 1 day ago</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-right">
-          <div class="fit-score mid">77%</div>
-          <div class="status-badge" style="background:var(--color-trust-dim);color:var(--color-trust);border:1px solid rgba(59,130,246,0.3)">New</div>
-        </div>
-      </div>
-
-      <!-- Not a Match -->
-      <div class="app-card rejected" data-status="rejected">
-        <div class="status-bar status-rejected"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-title">VP of Engineering — AI</div>
-              <div class="card-company">Fortuna Systems</div>
-              <div class="card-meta">
-                <span><strong>On-site</strong></span>
-                <span>$300K — $400K</span>
-                <span>Rejected 4 days ago</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-right">
-          <div class="fit-score lo">62%</div>
-          <div class="status-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)">Not a match</div>
-        </div>
-      </div>
-
-    </div>
+    <div class="card-list" id="cardList"></div>
 
     <!-- Recovery Card (shown when "Not a match" filter active) -->
     <div class="recovery-card" id="recoveryCard" style="display:none">
-      <div class="recovery-title">Not this time. But here's what to adjust.</div>
-      <div class="recovery-text">Your fit was 62% — the role prioritized deep ml-ops experience over healthcare AI. Here are stronger matches for your profile:</div>
-      <div class="recovery-tips">
-        <div class="recovery-tip">Apply to Chief AI Officer at CareNet — 89% fit. Healthcare AI is their priority.</div>
-        <div class="recovery-tip">Apply to VP AI Strategy at HealthTech — 92% fit. Your exact background.</div>
-        <div class="recovery-tip">Update your title to "Chief AI Officer" to attract $280K+ roles.</div>
-      </div>
+      <div class="recovery-title">Not this time. Here's what to try instead.</div>
+      <div class="recovery-text" id="recoveryText">Consider these adjustments to improve your match rate.</div>
+      <div class="recovery-tips" id="recoveryTips"></div>
     </div>
 
   </div>
 </main>
 
+<!-- Add Application Modal -->
+<div id="addAppModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--bg-void);border:1px solid var(--glass-border);border-radius:16px;padding:28px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto">
+    <h3 style="margin:0 0 20px;font-size:20px;font-weight:700;color:var(--text-primary)">Add New Application</h3>
+    <form id="addAppForm">
+      <div style="margin-bottom:14px">
+        <label style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500">Job Title</label>
+        <input type="text" id="appTitle" required style="width:100%;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-family:Inter,sans-serif;outline:none" placeholder="e.g. Chief AI Officer">
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500">Company</label>
+        <input type="text" id="appCompany" required style="width:100%;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-family:Inter,sans-serif;outline:none" placeholder="e.g. HealthTech Systems">
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:14px">
+        <div style="flex:1">
+          <label style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500">Location</label>
+          <input type="text" id="appLocation" style="width:100%;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-family:Inter,sans-serif;outline:none" placeholder="e.g. Remote">
+        </div>
+        <div style="flex:1">
+          <label style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500">Type</label>
+          <select id="appLocationType" style="width:100%;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-family:Inter,sans-serif;outline:none">
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="On-site">On-site</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:14px">
+        <div style="flex:1">
+          <label style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500">Salary Min</label>
+          <input type="number" id="appSalaryMin" style="width:100%;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-family:Inter,sans-serif;outline:none" placeholder="150000">
+        </div>
+        <div style="flex:1">
+          <label style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500">Salary Max</label>
+          <input type="number" id="appSalaryMax" style="width:100%;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-family:Inter,sans-serif;outline:none" placeholder="200000">
+        </div>
+      </div>
+      <div style="margin-bottom:20px">
+        <label style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500">Status</label>
+        <select id="appStatus" style="width:100%;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-family:Inter,sans-serif;outline:none">
+          <option value="new">New</option>
+          <option value="applied">Applied</option>
+          <option value="interviewing">Interviewing</option>
+          <option value="offered">Offered</option>
+          <option value="rejected">Not a match</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" id="cancelAddApp" style="padding:10px 20px;background:transparent;border:1px solid var(--glass-border);border-radius:10px;color:var(--text-secondary);font-size:14px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif">Cancel</button>
+        <button type="submit" style="padding:10px 24px;background:linear-gradient(135deg,var(--color-trust),var(--color-growth));border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">Add Application</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Status Change Modal -->
+<div id="statusModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--bg-void);border:1px solid var(--glass-border);border-radius:16px;padding:28px;max-width:360px;width:100%">
+    <h3 style="margin:0 0 16px;font-size:18px;font-weight:700;color:var(--text-primary)">Update Status</h3>
+    <p id="statusModalAppName" style="margin:0 0 16px;font-size:14px;color:var(--text-secondary)"></p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+      <button class="status-change-btn" data-status="new" style="padding:10px 16px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;text-align:left">New</button>
+      <button class="status-change-btn" data-status="applied" style="padding:10px 16px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;text-align:left">Applied</button>
+      <button class="status-change-btn" data-status="interviewing" style="padding:10px 16px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-primary);font-size:14px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;text-align:left">Interviewing</button>
+      <button class="status-change-btn" data-status="offered" style="padding:10px 16px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);border-radius:10px;color:#00ff88;font-size:14px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;text-align:left">Offered</button>
+      <button class="status-change-btn" data-status="rejected" style="padding:10px 16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;color:#ef4444;font-size:14px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;text-align:left">Not a match</button>
+    </div>
+    <button id="cancelStatusModal" style="width:100%;padding:10px;background:transparent;border:1px solid var(--glass-border);border-radius:10px;color:var(--text-secondary);font-size:14px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif">Cancel</button>
+  </div>
+</div>
+
 <script src="app.js"></script>
 <script>
 (function() {
+  'use strict';
+
+  var APPS_KEY = 'signal_applications';
+  var currentFilter = 'all';
+  var currentStatusAppId = null;
+  var userProfile = null;
+
+  // ─── 1. Check user authentication ───
+  function checkAuth() {
+    var stored = localStorage.getItem('signal_user_data');
+    if (!stored) {
+      window.location.href = 'assessment.html';
+      return false;
+    }
+    try {
+      userProfile = JSON.parse(stored);
+    } catch(e) {
+      window.location.href = 'assessment.html';
+      return false;
+    }
+    return true;
+  }
+
+  // ─── 2. Generate default applications ───
+  function generateDefaultApplications(profile) {
+    var skills = profile.skills || [];
+    var salaryMin = profile.target_salary_min || 100000;
+    var salaryMax = profile.target_salary_max || 200000;
+    var location = profile.location_preference || 'any';
+    var title = profile.title || 'AI Leader';
+
+    var companies = [
+      { name: 'HealthTech Systems', industry: 'healthcare' },
+      { name: 'MedMind AI', industry: 'healthcare' },
+      { name: 'CareNet Health', industry: 'healthcare' },
+      { name: 'BrightPath Ventures', industry: 'tech' },
+      { name: 'Clara Health', industry: 'healthcare' },
+      { name: 'Apex Intelligence', industry: 'tech' },
+      { name: 'NovaStar AI', industry: 'tech' },
+      { name: 'DataBridge Corp', industry: 'enterprise' },
+      { name: 'TechForge Labs', industry: 'tech' },
+      { name: 'McKinley Partners', industry: 'consulting' }
+    ];
+
+    var titles = [
+      'Chief AI Officer',
+      'VP of AI Strategy',
+      'Director of AI Products',
+      'Senior AI Product Manager',
+      'Head of AI Implementation',
+      'AI Strategy Consultant',
+      'Director of Machine Learning',
+      'VP of AI Engineering'
+    ];
+
+    var locations = ['Remote', 'Hybrid', 'On-site'];
+    var preferredLoc = location === 'any' ? 'Remote' : location;
+
+    var statusWeights = ['new', 'new', 'applied', 'applied', 'applied', 'interviewing', 'interviewing', 'offered', 'rejected'];
+    var now = Date.now();
+    var dayMs = 86400000;
+
+    var apps = [];
+    var numApps = 5 + Math.floor(Math.random() * 3); // 5-7 apps
+
+    for (var i = 0; i < numApps; i++) {
+      var company = companies[i % companies.length];
+      var appTitle = titles[i % titles.length];
+      var status = statusWeights[i % statusWeights.length];
+      var locType = locations[i % locations.length];
+
+      // Vary salary based on title seniority
+      var baseSalary = 150000 + (i * 20000);
+      var salMin = Math.round((baseSalary + Math.random() * 30000) / 1000) * 1000;
+      var salMax = salMin + 40000 + Math.floor(Math.random() * 40000);
+
+      // Fit score based on skill match
+      var fitBase = 65 + Math.floor(Math.random() * 25);
+      if (skills.length > 0) {
+        // Boost if title matches
+        if (appTitle.toLowerCase().indexOf(title.toLowerCase().split(' ')[0]) !== -1) {
+          fitBase += 10;
+        }
+      }
+      var fitScore = Math.min(98, fitBase);
+
+      // Applied date - vary from 1-14 days ago
+      var daysAgo = 1 + Math.floor(Math.random() * 13);
+      var appliedDate = new Date(now - daysAgo * dayMs).toISOString();
+
+      apps.push({
+        id: 'app-' + Date.now() + '-' + i + '-' + Math.random().toString(36).substr(2, 5),
+        title: appTitle,
+        company: company.name,
+        location: locType,
+        locationType: locType,
+        salaryMin: salMin,
+        salaryMax: salMax,
+        status: status,
+        fitScore: fitScore,
+        appliedDate: appliedDate,
+        lastStatusChange: appliedDate,
+        notes: ''
+      });
+    }
+
+    return apps;
+  }
+
+  // ─── 3. Initialize or load applications ───
+  function loadApplications() {
+    var stored = localStorage.getItem(APPS_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch(e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  function saveApplications(apps) {
+    localStorage.setItem(APPS_KEY, JSON.stringify(apps));
+  }
+
+  function initApplications() {
+    var apps = loadApplications();
+    if (!apps || apps.length === 0) {
+      apps = generateDefaultApplications(userProfile);
+      saveApplications(apps);
+    }
+    return apps;
+  }
+
+  // ─── 4. Format helpers ───
+  function formatSalary(min, max) {
+    var fmt = function(n) {
+      return '$' + (n / 1000) + 'K';
+    };
+    return fmt(min) + ' — ' + fmt(max);
+  }
+
+  function formatDate(isoString) {
+    var date = new Date(isoString);
+    var now = new Date();
+    var diffMs = now - date;
+    var diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return diffDays + ' days ago';
+    if (diffDays < 14) return '1 week ago';
+    return diffDays + ' days ago';
+  }
+
+  function getStatusClass(status) {
+    var map = {
+      'new': 'status-new',
+      'viewed': 'status-viewed',
+      'applied': 'status-interested',
+      'interested': 'status-interested',
+      'interviewing': 'status-interviewing',
+      'screening': 'status-interviewing',
+      'offered': 'status-offered',
+      'offer': 'status-offered',
+      'rejected': 'status-rejected'
+    };
+    return map[status] || 'status-new';
+  }
+
+  function getStatusLabel(status) {
+    var map = {
+      'new': 'New',
+      'viewed': 'Viewed',
+      'applied': 'Applied',
+      'interested': 'In Review',
+      'interviewing': 'Interviewing',
+      'screening': 'Screening',
+      'offered': 'Offered',
+      'offer': 'Offered',
+      'rejected': 'Not a match'
+    };
+    return map[status] || status;
+  }
+
+  function getFitClass(score) {
+    if (score >= 80) return 'hi';
+    if (score >= 70) return 'mid';
+    return 'lo';
+  }
+
+  function getStatusBadgeStyle(status) {
+    var styles = {
+      'new': 'background:var(--color-trust-dim);color:var(--color-trust);border:1px solid rgba(59,130,246,0.3)',
+      'viewed': 'background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3)',
+      'applied': 'background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)',
+      'interested': 'background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)',
+      'interviewing': 'background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)',
+      'screening': 'background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)',
+      'offered': 'background:rgba(0,255,136,0.15);color:#00ff88;border:1px solid rgba(0,255,136,0.3)',
+      'offer': 'background:rgba(0,255,136,0.15);color:#00ff88;border:1px solid rgba(0,255,136,0.3)',
+      'rejected': 'background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)'
+    };
+    return styles[status] || styles['new'];
+  }
+
+  function getStageDotsHTML(status) {
+    var activeCount = 2;
+    if (status === 'interviewing' || status === 'screening') activeCount = 3;
+    if (status === 'offered' || status === 'offer') activeCount = 5;
+    if (status === 'rejected') activeCount = 0;
+
+    var html = '<div class="stage-dots">';
+    for (var i = 0; i < 5; i++) {
+      var cls = 'stage-dot';
+      if (i < activeCount) cls += ' active';
+      if (i === 2 && (status === 'interviewing' || status === 'screening')) cls += ' interviewing';
+      if (i === 4 && (status === 'offered' || status === 'offer')) cls += ' offered';
+      html += '<div class="' + cls + '"></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // ─── 5. Render cards ───
+  function renderCards(apps) {
+    var cardList = document.getElementById('cardList');
+    cardList.innerHTML = '';
+
+    apps.forEach(function(app, index) {
+      var card = document.createElement('div');
+      card.className = 'app-card';
+      if (app.status === 'rejected') card.classList.add('rejected');
+      card.dataset.status = app.status;
+      card.dataset.id = app.id;
+      card.style.transitionDelay = (index * 60) + 'ms';
+
+      var statusLabel = getStatusLabel(app.status);
+      var statusClass = getStatusClass(app.status);
+      var fitClass = getFitClass(app.fitScore);
+      var badgeStyle = getStatusBadgeStyle(app.status);
+      var stageDots = getStageDotsHTML(app.status);
+
+      card.innerHTML =
+        '<div class="status-bar ' + statusClass + '"></div>' +
+        '<div class="card-body" onclick="openStatusModal(\'' + app.id + '\')">' +
+          '<div class="card-top">' +
+            '<div>' +
+              '<div class="card-title">' + app.title + '</div>' +
+              '<div class="card-company">' + app.company + '</div>' +
+              '<div class="card-meta">' +
+                '<span><strong>' + app.locationType + '</strong></span>' +
+                '<span>' + formatSalary(app.salaryMin, app.salaryMax) + '</span>' +
+                '<span>' + formatDate(app.appliedDate) + '</span>' +
+              '</div>' +
+              stageDots +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="card-right">' +
+          '<div class="fit-score ' + fitClass + '">' + app.fitScore + '%</div>' +
+          '<div class="status-badge" style="' + badgeStyle + '">' + statusLabel + '</div>' +
+        '</div>';
+
+      cardList.appendChild(card);
+    });
+
+    // Re-observe for animations
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.05 });
+
+    cardList.querySelectorAll('.app-card').forEach(function(el) {
+      obs.observe(el);
+    });
+
+    updateCounts(apps);
+    checkBanners(apps);
+    updateRecoveryCard(apps);
+  }
+
+  // ─── 6. Update filter counts ───
+  function updateCounts(apps) {
+    var counts = { all: apps.length, applied: 0, interviewing: 0, offered: 0, rejected: 0 };
+
+    apps.forEach(function(app) {
+      if (app.status === 'interviewing' || app.status === 'screening') {
+        counts.interviewing++;
+      } else if (app.status === 'offered' || app.status === 'offer') {
+        counts.offered++;
+      } else if (app.status === 'rejected') {
+        counts.rejected++;
+      } else {
+        counts.applied++;
+      }
+    });
+
+    document.querySelectorAll('.filter-pill').forEach(function(pill) {
+      var filter = pill.dataset.filter;
+      if (counts[filter] !== undefined) {
+        pill.querySelector('.count').textContent = counts[filter];
+      }
+    });
+
+    var countEl = document.querySelector('.journey-count strong');
+    if (countEl) {
+      countEl.textContent = apps.length;
+    }
+  }
+
+  // ─── 7. Check banners ───
+  function checkBanners(apps) {
+    var hasOffer = false;
+    var silentApps = 0;
+    var sevenDaysMs = 7 * 86400000;
+    var now = Date.now();
+
+    apps.forEach(function(app) {
+      if (app.status === 'offered' || app.status === 'offer') hasOffer = true;
+      if (app.status !== 'rejected' && app.status !== 'offered' && app.status !== 'offer') {
+        var lastChange = new Date(app.lastStatusChange || app.appliedDate).getTime();
+        if (now - lastChange >= sevenDaysMs) silentApps++;
+      }
+    });
+
+    var offerBanner = document.getElementById('offerBanner');
+    var silenceAlert = document.getElementById('silenceAlert');
+
+    if (hasOffer) {
+      offerBanner.classList.add('show');
+      // Update offer banner content
+      var offeredApp = apps.find(function(a) { return a.status === 'offered' || a.status === 'offer'; });
+      if (offeredApp) {
+        offerBanner.querySelector('p strong').textContent = 'You\'re the one.';
+        offerBanner.querySelector('.offer-company').textContent = offeredApp.title + ' — ' + offeredApp.company + ' · ' + formatSalary(offeredApp.salaryMin, offeredApp.salaryMax);
+      }
+    } else {
+      offerBanner.classList.remove('show');
+    }
+
+    if (silentApps > 0) {
+      silenceAlert.classList.add('show');
+      silenceAlert.querySelector('.text strong').textContent = silentApps + ' role' + (silentApps > 1 ? 's' : '') + ' haven\'t moved in 7+ days.';
+    } else {
+      silenceAlert.classList.remove('show');
+    }
+  }
+
+  // ─── 8. Update recovery card ───
+  function updateRecoveryCard(apps) {
+    var recoveryCard = document.getElementById('recoveryCard');
+    if (currentFilter !== 'rejected') {
+      recoveryCard.style.display = 'none';
+      return;
+    }
+
+    var rejectedApp = apps.find(function(a) { return a.status === 'rejected'; });
+    if (!rejectedApp) {
+      recoveryCard.style.display = 'none';
+      return;
+    }
+
+    recoveryCard.style.display = 'block';
+    var tipsContainer = document.getElementById('recoveryTips');
+    tipsContainer.innerHTML = '';
+
+    // Find better matches
+    var betterApps = apps.filter(function(a) {
+      return a.status !== 'rejected' && a.fitScore > rejectedApp.fitScore;
+    }).sort(function(a, b) { return b.fitScore - a.fitScore; }).slice(0, 3);
+
+    betterApps.forEach(function(app) {
+      var tip = document.createElement('div');
+      tip.className = 'recovery-tip';
+      tip.textContent = 'Apply to ' + app.title + ' at ' + app.company + ' — ' + app.fitScore + '% fit. Strong match for your profile.';
+      tipsContainer.appendChild(tip);
+    });
+
+    if (betterApps.length === 0) {
+      var tip = document.createElement('div');
+      tip.className = 'recovery-tip';
+      tip.textContent = 'No strong matches found yet. Keep your profile updated to discover better roles.';
+      tipsContainer.appendChild(tip);
+    }
+  }
+
+  // ─── 9. Filter logic ───
+  function filterCards(apps) {
+    var cards = document.querySelectorAll('.app-card');
+    var count = 0;
+
+    cards.forEach(function(card) {
+      var status = card.dataset.status;
+      var show = currentFilter === 'all' ||
+        (currentFilter === 'applied' && ['applied', 'interested', 'viewed', 'new'].includes(status)) ||
+        status === currentFilter;
+
+      card.style.display = show ? 'flex' : 'none';
+      if (show) count++;
+    });
+
+    updateRecoveryCard(apps);
+  }
+
+  // ─── 10. Status modal ───
+  window.openStatusModal = function(appId) {
+    currentStatusAppId = appId;
+    var apps = loadApplications() || [];
+    var app = apps.find(function(a) { return a.id === appId; });
+    if (!app) return;
+
+    document.getElementById('statusModalAppName').textContent = app.title + ' at ' + app.company;
+    document.getElementById('statusModal').style.display = 'flex';
+  };
+
+  function closeStatusModal() {
+    document.getElementById('statusModal').style.display = 'none';
+    currentStatusAppId = null;
+  }
+
+  function updateAppStatus(newStatus) {
+    var apps = loadApplications() || [];
+    var idx = apps.findIndex(function(a) { return a.id === currentStatusAppId; });
+    if (idx === -1) return;
+
+    apps[idx].status = newStatus;
+    apps[idx].lastStatusChange = new Date().toISOString();
+    saveApplications(apps);
+    renderCards(apps);
+    closeStatusModal();
+  }
+
+  // ─── 11. Add application modal ───
+  function openAddModal() {
+    document.getElementById('addAppModal').style.display = 'flex';
+    document.getElementById('appTitle').focus();
+  }
+
+  function closeAddModal() {
+    document.getElementById('addAppModal').style.display = 'none';
+    document.getElementById('addAppForm').reset();
+  }
+
+  function addApplication(appData) {
+    var apps = loadApplications() || [];
+    var newApp = {
+      id: 'app-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+      title: appData.title,
+      company: appData.company,
+      location: appData.locationType,
+      locationType: appData.locationType,
+      salaryMin: parseInt(appData.salaryMin, 10) || 0,
+      salaryMax: parseInt(appData.salaryMax, 10) || 0,
+      status: appData.status,
+      fitScore: 75 + Math.floor(Math.random() * 20),
+      appliedDate: new Date().toISOString(),
+      lastStatusChange: new Date().toISOString(),
+      notes: ''
+    };
+    apps.unshift(newApp);
+    saveApplications(apps);
+    renderCards(apps);
+    closeAddModal();
+  }
+
+  // ─── Init ───
+  if (!checkAuth()) return;
+
+  var applications = initApplications();
+
+  // Loading screen
   window.addEventListener('load', function() {
     setTimeout(function() {
       var l = document.getElementById('loading');
@@ -362,54 +733,60 @@ body{background:var(--bg-void)}
 
   if (window.SignalV20) { window.SignalV20.Nav.init(); }
 
-  // Card reveal
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.05 });
+  // Render initial cards
+  renderCards(applications);
 
-  document.querySelectorAll('.app-card').forEach(function(el, i) {
-    el.style.transitionDelay = (i * 60) + 'ms';
-    obs.observe(el);
-  });
-
-  // Filter
-  var currentFilter = 'all';
-  var cards = document.querySelectorAll('.app-card');
-
+  // Filter pills
   document.querySelectorAll('.filter-pill').forEach(function(pill) {
     pill.addEventListener('click', function() {
       document.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
       this.classList.add('active');
       currentFilter = this.dataset.filter;
-      filterCards();
+      filterCards(applications);
     });
   });
 
-  function filterCards() {
-    var count = 0;
-    cards.forEach(function(card) {
-      var s = card.dataset.status;
-      var show = currentFilter === 'all' ||
-        (currentFilter === 'applied' && ['applied','interested','viewed','new'].includes(s)) ||
-        s === currentFilter;
-      card.style.display = show ? 'flex' : 'none';
-      if (show) count++;
+  // Add application button (inject into journey-header)
+  var addBtn = document.createElement('button');
+  addBtn.className = 'empty-cta';
+  addBtn.style.cssText = 'padding:10px 20px;font-size:13px;margin-left:auto';
+  addBtn.textContent = '+ Add Application';
+  addBtn.addEventListener('click', openAddModal);
+  document.querySelector('.journey-header').appendChild(addBtn);
+
+  // Add modal form
+  document.getElementById('addAppForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    addApplication({
+      title: document.getElementById('appTitle').value.trim(),
+      company: document.getElementById('appCompany').value.trim(),
+      locationType: document.getElementById('appLocationType').value,
+      salaryMin: document.getElementById('appSalaryMin').value,
+      salaryMax: document.getElementById('appSalaryMax').value,
+      status: document.getElementById('appStatus').value
     });
+  });
 
-    var rejected = currentFilter === 'rejected';
-    document.getElementById('recoveryCard').style.display = rejected ? 'block' : 'none';
-  }
+  document.getElementById('cancelAddApp').addEventListener('click', closeAddModal);
 
-  // Silence alert
-  document.getElementById('silenceAlert').classList.add('show');
+  // Status modal buttons
+  document.querySelectorAll('.status-change-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      updateAppStatus(this.dataset.status);
+    });
+  });
 
-  // Offer banner
-  document.getElementById('offerBanner').classList.add('show');
+  document.getElementById('cancelStatusModal').addEventListener('click', closeStatusModal);
+
+  // Close modals on backdrop click
+  document.getElementById('statusModal').addEventListener('click', function(e) {
+    if (e.target === this) closeStatusModal();
+  });
+
+  document.getElementById('addAppModal').addEventListener('click', function(e) {
+    if (e.target === this) closeAddModal();
+  });
+
 })();
 </script>
 </body>

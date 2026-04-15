@@ -13,9 +13,9 @@
 
   // ─── Configuration ────────────────────────────────────────────────────────
   const CONFIG = {
-    API_BASE: (window.location.origin === 'file://' || window.location.port === '')
-      ? 'http://localhost:8081/v1'
-      : window.location.origin + '/v1',
+    API_BASE: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? window.location.origin + '/v1'
+      : null, // Production: use localStorage demo mode
     USER_ID_KEY: 'signal_user_id',
     USER_DATA_KEY: 'signal_user_data',
     CURSOR_LERP: 0.1,

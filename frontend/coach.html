@@ -301,6 +301,388 @@ body{background:var(--bg-void)}
 <script src="app.js"></script>
 <script>
 (function() {
+  // ═══════════════════════════════════════════════════════════════════════
+  // SIGNAL COACH — Personalized Coaching Engine
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // Check for user data, redirect if not found
+  var storedUser = localStorage.getItem('signal_user_data');
+  if (!storedUser) {
+    window.location.href = 'assessment.html';
+    return;
+  }
+
+  var user = JSON.parse(storedUser);
+  var firstName = user.name ? user.name.split(' ')[0] : 'Professional';
+
+  // ─── Helper: Determine archetype ───
+  function getArchetype(u) {
+    var skills = (u.skills || []).map(function(s){ return s.toLowerCase(); });
+    var title = (u.title || '').toLowerCase();
+    if (skills.indexOf('ai') !== -1 || skills.indexOf('machine learning') !== -1 || title.indexOf('ai') !== -1) {
+      return { name: 'The AI Strategist', sub: 'You see where the industry is going before it gets there. You translate complexity into clarity.' };
+    }
+    if (skills.indexOf('healthcare') !== -1 || skills.indexOf('health tech') !== -1) {
+      return { name: 'The Healthcare Navigator', sub: 'You understand both the system and the data. You\'ve seen where it breaks and know how to fix it.' };
+    }
+    if (u.experience_years >= 15) {
+      return { name: 'The Senior Operator', sub: 'You\'ve done this long enough to know what works. Your resume isn\'t a list — it\'s a track record.' };
+    }
+    return { name: 'The Growth Architect', sub: 'You build things that scale. You connect dots others don\'t see.' };
+  }
+
+  // ─── Helper: Get salary tier ───
+  function getSalaryTier(u) {
+    var max = u.target_salary_max || u.target_salary_min || 100000;
+    if (max >= 200000) return 'c-suite';
+    if (max >= 150000) return 'vp';
+    return 'director';
+  }
+
+  // ─── Helper: Check if remote-friendly ───
+  function isRemote(u) {
+    return u.location_preference === 'remote' || u.location_preference === 'any';
+  }
+
+  // ─── Helper: Check for AI/tech focus ───
+  function isAIFocused(u) {
+    var skills = (u.skills || []).map(function(s){ return s.toLowerCase(); });
+    return skills.indexOf('ai') !== -1 || skills.indexOf('machine learning') !== -1 || skills.indexOf('data') !== -1 || skills.indexOf('technology') !== -1;
+  }
+
+  // ─── Helper: Check for healthcare focus ───
+  function isHealthcareFocused(u) {
+    var skills = (u.skills || []).map(function(s){ return s.toLowerCase(); });
+    var industries = (u.industry_preferences || []).map(function(i){ return i.toLowerCase(); });
+    return skills.indexOf('healthcare') !== -1 || industries.indexOf('healthcare') !== -1 || industries.indexOf('health tech') !== -1;
+  }
+
+  // ─── Generate 5 personalized action items ───
+  function generateActions(u) {
+    var archetype = getArchetype(u);
+    var salaryTier = getSalaryTier(u);
+    var remote = isRemote(u);
+    var ai = isAIFocused(u);
+    var health = isHealthcareFocused(u);
+    var first = firstName;
+
+    var actions = [];
+
+    // Primary action based on archetype
+    if (ai && health) {
+      actions.push({
+        priority: 'high',
+        category: 'Network',
+        text: 'Connect with a Chief AI Officer at a healthcare company. Search "Chief AI Officer" + "healthcare" on LinkedIn and identify 2 executives to follow',
+        time: '15 minutes',
+        nuance: 'These roles are opening in the next 90 days'
+      });
+      actions.push({
+        priority: 'high',
+        category: 'Profile',
+        text: 'Update your LinkedIn headline to reflect your ' + (u.experience_years || 10) + '+ years at the intersection of AI and healthcare',
+        time: '10 minutes',
+        nuance: 'Recursive positioning outperforms generic titles'
+      });
+    } else if (ai) {
+      actions.push({
+        priority: 'high',
+        category: 'Network',
+        text: 'Message a Chief AI Officer at a company hiring in your space. Reference a specific initiative they\'re working on',
+        time: '15 minutes',
+        nuance: '67% of roles filled before posting'
+      });
+      actions.push({
+        priority: 'high',
+        category: 'Profile',
+        text: 'Refresh your LinkedIn About section with a narrative about your AI leadership journey',
+        time: '20 minutes',
+        nuance: 'Specificity creates conviction'
+      });
+    } else {
+      actions.push({
+        priority: 'high',
+        category: 'Network',
+        text: 'Identify 2 decision-makers at companies where you want to be a director-level or above hire. Follow their content for 2 weeks',
+        time: '20 minutes',
+        nuance: 'Warm introductions beat cold applications 4:1'
+      });
+      actions.push({
+        priority: 'high',
+        category: 'Profile',
+        text: 'Reframe your LinkedIn headline around the outcome you create, not your job title',
+        time: '10 minutes',
+        nuance: 'Outcomes are memorable'
+      });
+    }
+
+    // Salary-based action
+    if (salaryTier === 'c-suite') {
+      actions.push({
+        priority: 'high',
+        category: 'Positioning',
+        text: 'Draft a one-paragraph "positioning statement" for the C-suite conversation. Lead with your biggest organizational win',
+        time: '30 minutes',
+        nuance: 'C-suite hiring is narrative-driven'
+      });
+    } else if (salaryTier === 'vp') {
+      actions.push({
+        priority: 'med',
+        category: 'Positioning',
+        text: 'Audit 3 job descriptions for VP roles you want. Extract the exact language they use, then mirror it in your resume',
+        time: '45 minutes',
+        nuance: 'Keyword alignment increases callback rates 3x'
+      });
+    } else {
+      actions.push({
+        priority: 'med',
+        category: 'Positioning',
+        text: 'Identify 3 roles one level above your current target. Understand what they\'d expect from you at that level',
+        time: '30 minutes',
+        nuance: 'The market moves between chapters — be ready for what\'s next'
+      });
+    }
+
+    // Remote-specific action
+    if (remote) {
+      actions.push({
+        priority: 'med',
+        category: 'Network',
+        text: 'Join 2 virtual executive networking events this week. Focus on async first — engage with their content before the event',
+        time: '20 minutes per event',
+        nuance: 'Remote executives are building relationships deliberately'
+      });
+    }
+
+    // Final action - always interview prep
+    actions.push({
+      priority: 'med',
+      category: 'Interview',
+      text: 'Draft your "origin story" for this career transition. Practice saying it in 90 seconds — make it about them, not you',
+      time: '30 minutes',
+      nuance: 'Executive audiences respond to shared narratives'
+    });
+
+    // Return top 5
+    return actions.slice(0, 5);
+  }
+
+  // ─── Generate weekly focus tip ───
+  function generateFocus(u) {
+    var salaryTier = getSalaryTier(u);
+    var ai = isAIFocused(u);
+    var health = isHealthcareFocused(u);
+    var remote = isRemote(u);
+
+    if (ai && health) {
+      return {
+        headline: 'You\'re in the right room — now make sure they know it',
+        text: 'Your combination of AI fluency and healthcare context is rare. Most candidates have one or the other. This week, make sure every touchpoint (LinkedIn, resume, conversations) leads with both.',
+        why: 'Hiring teams at the intersection of AI and healthcare are building now. The window is open — don\'t wait for the posting.'
+      };
+    }
+    if (salaryTier === 'c-suite') {
+      return {
+        headline: 'Position yourself as the decision, not the candidate',
+        text: 'At the C-suite level, you\'re not applying — you\'re being recruited. This week, focus on visibility: engage with content from your target companies, comment with insight, not flattery.',
+        why: 'C-suite hiring is 80% relationship and 20% process. The process part comes after the relationship.'
+      };
+    }
+    if (remote) {
+      return {
+        headline: 'Build your remote executive presence intentionally',
+        text: 'Remote executives stand out through their content and their network. This week, publish one post or article about a challenge you\'ve solved that would resonate with your target audience.',
+        why: 'In a remote environment, your voice is your presence. Written communication creates a trail that compounds.'
+      };
+    }
+    // Default focus
+    return {
+      headline: 'Your next opportunity is closer than the job boards suggest',
+      text: 'Executive roles are often filled through warm connections before they\'re ever posted. This week, focus on deepening one existing connection rather than expanding your reach.',
+      why: 'Quality of network matters more than quantity at this stage of your career.'
+    };
+  }
+
+  // ─── Archetype traits ───
+  function getTraits(u) {
+    var openness = 75 + Math.min((u.experience_years || 10) * 1.5, 20);
+    var conscientiousness = 70 + Math.min((u.experience_years || 10), 20);
+    var extraversion = u.location_preference === 'remote' ? 55 : 70;
+    var agreeableness = 68;
+    var stability = 65;
+
+    return [
+      { key: 'Openness', val: openness, fill: 'linear-gradient(90deg,#a855f7,#3b82f6)' },
+      { key: 'Conscientiousness', val: conscientiousness, fill: 'linear-gradient(90deg,#3b82f6,#10b981)' },
+      { key: 'Extraversion', val: extraversion, fill: 'linear-gradient(90deg,#3b82f6,#fbbf24)' },
+      { key: 'Agreeableness', val: agreeableness, fill: 'linear-gradient(90deg,#10b981,#3b82f6)' },
+      { key: 'Emotional Stability', val: stability, fill: 'linear-gradient(90deg,#fbbf24,#ef4444)' }
+    ];
+  }
+
+  // ─── Archetype roles ───
+  function getRoles(u) {
+    var ai = isAIFocused(u);
+    var health = isHealthcareFocused(u);
+    var salaryTier = getSalaryTier(u);
+
+    var roles = [];
+    if (ai) {
+      roles.push({ name: 'Chief AI Officer', score: 94 });
+      roles.push({ name: 'VP of AI Strategy', score: 89 });
+      roles.push({ name: 'Director of AI Operations', score: 88 });
+    } else if (health) {
+      roles.push({ name: 'VP Healthcare Strategy', score: 91 });
+      roles.push({ name: 'Director of Health Tech', score: 86 });
+      roles.push({ name: 'Chief Strategy Officer', score: 83 });
+    } else {
+      roles.push({ name: 'Chief Operating Officer', score: 87 });
+      roles.push({ name: 'VP Strategy', score: 84 });
+      roles.push({ name: 'Director of Operations', score: 82 });
+    }
+    return roles;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PERSONALIZATION ENGINE
+  // ═══════════════════════════════════════════════════════════════════════
+
+  var archetype = getArchetype(user);
+  var focus = generateFocus(user);
+  var actions = generateActions(user);
+  var traits = getTraits(user);
+  var roles = getRoles(user);
+
+  // Update greeting
+  var header = document.querySelector('.coach-header');
+  if (header) {
+    var h1 = header.querySelector('h1');
+    var p = header.querySelector('p');
+    if (h1) h1.textContent = firstName + '\'s Career Coach';
+    if (p) p.textContent = 'Your personalized path forward, week by week.';
+  }
+
+  // Update Weekly Focus card
+  var focusCard = document.getElementById('focusCard');
+  if (focusCard) {
+    var headline = focusCard.querySelector('.focus-headline');
+    var text = focusCard.querySelector('.focus-text');
+    var why = focusCard.querySelector('.focus-why');
+    if (headline) headline.textContent = focus.headline;
+    if (text) text.textContent = focus.text;
+    if (why) why.textContent = 'Why this matters: ' + focus.why;
+  }
+
+  // Update Persona card
+  var personaCard = document.querySelector('.g-card');
+  if (personaCard) {
+    var archetypeEl = personaCard.querySelector('.archetype');
+    var subEl = personaCard.querySelector('.archetype-sub');
+    if (archetypeEl) archetypeEl.textContent = archetype.name;
+    if (subEl) subEl.textContent = archetype.sub;
+
+    // Update traits
+    var traitBars = personaCard.querySelectorAll('.trait');
+    traits.forEach(function(t, i) {
+      if (traitBars[i]) {
+        var fill = traitBars[i].querySelector('.fill');
+        var val = traitBars[i].querySelector('.val');
+        if (fill) {
+          fill.dataset.width = t.val;
+          fill.style.background = t.fill;
+        }
+        if (val) val.textContent = t.val + '%';
+      }
+    });
+
+    // Update roles
+    var roleChips = personaCard.querySelectorAll('.role-chip');
+    roles.forEach(function(r, i) {
+      if (roleChips[i]) {
+        var nameEl = roleChips[i].querySelector('.name');
+        var scoreEl = roleChips[i].querySelector('.score');
+        if (nameEl) nameEl.textContent = r.name;
+        if (scoreEl) scoreEl.textContent = r.score + '% fit';
+      }
+    });
+  }
+
+  // Update Action Items
+  var actionsContainer = document.querySelector('#focusCard').closest('.grid-2').querySelector('.g-card:last-child');
+  if (actionsContainer) {
+    var progressMeta = actionsContainer.querySelector('.progress-meta .val');
+    if (progressMeta) progressMeta.textContent = '0 / 5';
+
+    var actionItems = actionsContainer.querySelectorAll('.action-item');
+    actions.forEach(function(a, i) {
+      if (actionItems[i]) {
+        var badges = actionItems[i].querySelectorAll('.badge');
+        var text = actionItems[i].querySelector('.action-text');
+        var meta2 = actionItems[i].querySelector('.action-meta2');
+        var priorityClass = a.priority === 'high' ? 'badge-high' : (a.priority === 'med' ? 'badge-med' : 'badge-low');
+
+        if (badges[0]) {
+          badges[0].className = 'badge ' + priorityClass;
+          badges[0].textContent = a.priority.charAt(0).toUpperCase() + a.priority.slice(1);
+        }
+        if (badges[1]) {
+          badges[1].className = 'badge badge-low';
+          badges[2] ? badges[2].className = 'badge badge-low' : null;
+          badges[1].textContent = a.category;
+        }
+        if (text) text.textContent = a.text;
+        if (meta2) meta2.textContent = a.time + ' — ' + a.nuance;
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PERSISTENCE & PROGRESS (signal_coach_completed)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  var total = 5;
+  var completed = 0;
+
+  window.toggleAction = function(item) {
+    item.classList.toggle('done');
+    completed = document.querySelectorAll('.action-item.done').length;
+    document.getElementById('actionCount').textContent = completed + ' / ' + total;
+    document.getElementById('actionFill').style.width = (completed / total * 100) + '%';
+    if (completed === total) {
+      document.getElementById('allDone').style.display = 'block';
+    } else {
+      document.getElementById('allDone').style.display = 'none';
+    }
+    saveCompleted();
+  };
+
+  function saveCompleted() {
+    var states = Array.from(document.querySelectorAll('.action-item')).map(function(el) {
+      return el.classList.contains('done');
+    });
+    localStorage.setItem('signal_coach_completed', JSON.stringify(states));
+  }
+
+  function loadCompleted() {
+    var saved = localStorage.getItem('signal_coach_completed');
+    if (saved) {
+      try {
+        var states = JSON.parse(saved);
+        document.querySelectorAll('.action-item').forEach(function(el, i) {
+          if (states[i]) el.classList.add('done');
+        });
+        completed = states.filter(Boolean).length;
+        document.getElementById('actionCount').textContent = completed + ' / ' + total;
+        document.getElementById('actionFill').style.width = (completed / total * 100) + '%';
+        if (completed === total) document.getElementById('allDone').style.display = 'block';
+      } catch(e) {}
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // EXISTING V20 INITIALIZATION
+  // ═══════════════════════════════════════════════════════════════════════
+
   window.addEventListener('load', function() {
     setTimeout(function() {
       var l = document.getElementById('loading');
@@ -359,41 +741,8 @@ body{background:var(--bg-void)}
     document.getElementById('focusCelebration').classList.add('show');
   }
 
-  // Actions
-  var total = 5;
-  var completed = 0;
-
-  window.toggleAction = function(item) {
-    item.classList.toggle('done');
-    completed = document.querySelectorAll('.action-item.done').length;
-    document.getElementById('actionCount').textContent = completed + ' / ' + total;
-    document.getElementById('actionFill').style.width = (completed / total * 100) + '%';
-    if (completed === total) {
-      document.getElementById('allDone').style.display = 'block';
-    } else {
-      document.getElementById('allDone').style.display = 'none';
-    }
-    localStorage.setItem('signal_actions', JSON.stringify(
-      Array.from(document.querySelectorAll('.action-item')).map(function(el) {
-        return el.classList.contains('done');
-      })
-    ));
-  };
-
-  // Restore action state
-  var saved = localStorage.getItem('signal_actions');
-  if (saved) {
-    try {
-      var states = JSON.parse(saved);
-      document.querySelectorAll('.action-item').forEach(function(el, i) {
-        if (states[i]) el.classList.add('done');
-      });
-      completed = states.filter(Boolean).length;
-      document.getElementById('actionCount').textContent = completed + ' / ' + total;
-      document.getElementById('actionFill').style.width = (completed / total * 100) + '%';
-      if (completed === total) document.getElementById('allDone').style.display = 'block';
-    } catch(e) {}
-  }
+  // Load saved action states
+  loadCompleted();
 })();
 </script>
 </body>

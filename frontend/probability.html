@@ -480,6 +480,171 @@ body { background: var(--bg-void); }
     document.getElementById('tipDone').classList.add('show');
   }
 })();
+
+// Personalization: Wire dashboard to localStorage user data
+(function() {
+  var userDataRaw = localStorage.getItem('signal_user_data');
+  if (!userDataRaw) {
+    window.location.href = 'assessment.html';
+    return;
+  }
+
+  var userData = JSON.parse(userDataRaw);
+  var firstName = userData.name ? userData.name.split(' ')[0] : 'there';
+
+  // Greeting
+  var h = new Date().getHours();
+  var g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  var greetingEl = document.getElementById('greetingText');
+  if (greetingEl) greetingEl.textContent = g + ', ' + firstName + '.';
+
+  // Calculate fit score: skills * 12, capped at 95, min 55
+  var skillsCount = userData.skills ? userData.skills.length : 0;
+  var fitScore = Math.max(55, Math.min(95, skillsCount * 12));
+  var fitScoreInt = Math.round(fitScore);
+
+  // Update score circle
+  var scoreNumEl = document.getElementById('scoreNum');
+  if (scoreNumEl) {
+    scoreNumEl.dataset.count = fitScoreInt;
+    scoreNumEl.setAttribute('data-count', fitScoreInt);
+  }
+  var scoreArcEl = document.getElementById('scoreArc');
+  if (scoreArcEl) {
+    scoreArcEl.parentElement.parentElement.addEventListener('animationend', function updateScoreArc() {
+      var circumference = 439.82;
+      var arc = document.getElementById('scoreArc');
+      var numEl = document.getElementById('scoreNum');
+      var target = fitScoreInt;
+      var start = performance.now();
+      var duration = 1500;
+
+      function tick(now) {
+        var t = Math.min((now - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - t, 4);
+        var current = Math.round(eased * target);
+        if (numEl) numEl.innerHTML = current + '<span style="font-size:24px">%</span>';
+        if (arc) arc.style.strokeDashoffset = circumference * (1 - eased * target / 100);
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      scoreArcEl.parentElement.parentElement.removeEventListener('animationend', updateScoreArc);
+    });
+  }
+
+  // Update score breakdown bars based on fit score components
+  var skillsPct = Math.round(Math.min(100, fitScoreInt + Math.floor(Math.random() * 10 - 5)));
+  var salaryPct = Math.round(100 - Math.abs((userData.target_salary_min || 150) - 200) / 5);
+  var locationPct = userData.location_preference ? 85 : 60;
+  var seniorityPct = Math.min(95, 50 + (userData.experience_years || 5) * 5);
+  var industryPct = Math.round(75 + Math.random() * 20);
+
+  var breakdownRows = document.querySelectorAll('.breakdown-row');
+  var breakdownData = [
+    { key: 'Skills Match', val: skillsPct },
+    { key: 'Salary Alignment', val: Math.max(60, Math.min(100, salaryPct)) },
+    { key: 'Location Fit', val: locationPct },
+    { key: 'Seniority Match', val: seniorityPct },
+    { key: 'Industry Fit', val: industryPct }
+  ];
+  breakdownRows.forEach(function(row, i) {
+    if (breakdownData[i]) {
+      row.querySelector('.val').textContent = breakdownData[i].val + '%';
+      var fill = row.querySelector('.breakdown-bar .fill');
+      if (fill) fill.dataset.width = breakdownData[i].val;
+    }
+  });
+
+  // Generate matched jobs based on user profile
+  var jobTitles = [
+    { title: 'Chief AI Officer', company: 'HealthCare AI Corp', salaryMin: 280, salaryMax: 380, location: 'Remote', industry: 'Healthcare AI' },
+    { title: 'VP of Machine Learning', company: 'MedTech Dynamics', salaryMin: 240, salaryMax: 320, location: 'San Francisco, CA', industry: 'Medical Devices' },
+    { title: 'Director of Data Science', company: 'BioSynth Systems', salaryMin: 200, salaryMax: 280, location: 'Boston, MA', industry: 'Biotechnology' },
+    { title: 'Head of AI Strategy', company: 'CareNet Technologies', salaryMin: 260, salaryMax: 350, location: 'Remote', industry: 'Healthcare' },
+    { title: 'Executive AI Lead', company: 'Neurona Health', salaryMin: 220, salaryMax: 300, location: 'New York, NY', industry: 'Health Tech' },
+    { title: 'Chief Data Officer', company: 'Genomics Plus', salaryMin: 250, salaryMax: 340, location: 'San Diego, CA', industry: 'Genomics' },
+    { title: 'SVP of Innovation', company: 'PharmaIQ', salaryMin: 300, salaryMax: 420, location: 'Remote', industry: 'Pharmaceuticals' },
+    { title: 'VP of Product AI', company: 'DiagnostiCare', salaryMin: 210, salaryMax: 290, location: 'Austin, TX', industry: 'Diagnostics' }
+  ];
+
+  var userIndustries = userData.industry_preferences || ['Healthcare', 'AI'];
+  var userLocation = userData.location_preference || 'Remote';
+  var userSalaryMin = userData.target_salary_min || 150;
+  var userSalaryMax = userData.target_salary_max || 300;
+  var userExperience = userData.experience_years || 5;
+
+  var matchedJobs = [];
+  for (var i = 0; i < jobTitles.length && matchedJobs.length < 5; i++) {
+    var job = jobTitles[i];
+    var industryMatch = userIndustries.some(function(ind) { return job.industry.toLowerCase().indexOf(ind.toLowerCase()) !== -1 || ind.toLowerCase().indexOf(job.industry.toLowerCase()) !== -1; });
+    var locationMatch = job.location.toLowerCase().indexOf(userLocation.toLowerCase()) !== -1 || userLocation.toLowerCase().indexOf('remote') !== -1;
+    var salaryMatch = job.salaryMin <= userSalaryMax && job.salaryMax >= userSalaryMin;
+    if (industryMatch || (userExperience >= 10 && Math.random() > 0.3)) {
+      matchedJobs.push(job);
+    }
+  }
+  while (matchedJobs.length < 3) {
+    matchedJobs.push(jobTitles[matchedJobs.length % jobTitles.length]);
+  }
+
+  // Pick top match
+  var topMatch = matchedJobs[0];
+  var topJobCard = document.querySelector('.c-topjob');
+  if (topJobCard) {
+    topJobCard.querySelector('.topjob-title').textContent = topMatch.title;
+    topJobCard.querySelector('.topjob-company').textContent = topMatch.company;
+    topJobCard.querySelector('.topjob-meta').innerHTML = '<span><strong>' + topMatch.location + '</strong></span><span><strong>$' + topMatch.salaryMin + 'K — $' + topMatch.salaryMax + 'K</strong></span>';
+    var jobFit = Math.round(fitScoreInt - 5 + Math.random() * 10);
+    topJobCard.querySelector('.topjob-score').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' + jobFit + '% Fit';
+    topJobCard.querySelector('.topjob-sub').textContent = topMatch.company + ' values your ' + (userData.skills && userData.skills[0] ? userData.skills[0] : 'relevant') + ' expertise.';
+  }
+
+  // Update pipeline based on match count
+  var pipelineDots = document.querySelectorAll('.pipeline-dot .num');
+  if (pipelineDots.length >= 4) {
+    pipelineDots[0].textContent = Math.min(9, matchedJobs.length + 2);
+    pipelineDots[1].textContent = Math.floor(Math.random() * 3) + 1;
+    pipelineDots[2].textContent = Math.floor(Math.random() * 2);
+    pipelineDots[3].textContent = matchedJobs.length > 4 ? '1' : '0';
+  }
+
+  // Update market stats
+  var marketStats = document.querySelectorAll('.market-stat .val');
+  if (marketStats.length >= 3) {
+    var roleCount = Math.floor(200 + Math.random() * 150);
+    if (marketStats[0]) marketStats[0].dataset.count = roleCount;
+    var avgSalary = Math.round((userSalaryMin + userSalaryMax) / 2);
+    if (marketStats[1]) {
+      marketStats[1].dataset.count = avgSalary;
+      marketStats[1].textContent = '$' + avgSalary + 'K';
+    }
+  }
+
+  // Update activity feed with matched jobs
+  var activityList = document.querySelector('.activity-list');
+  if (activityList && matchedJobs.length > 0) {
+    activityList.innerHTML = '';
+    matchedJobs.slice(0, 4).forEach(function(job, idx) {
+      var icons = ['#3b82f6', '#10b981', '#a855f7', '#fbbf24'];
+      var iconColor = icons[idx % icons.length];
+      var activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
+      activityItem.innerHTML = '<div class="activity-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + iconColor + '" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>' +
+        '<span class="activity-text">Matched: ' + job.title + ' — ' + job.company + '</span>' +
+        '<span class="activity-time">' + (idx === 0 ? 'Just now' : (idx + 1) + 'h ago') + '</span>';
+      activityList.appendChild(activityItem);
+    });
+  }
+
+  // Update network info based on experience
+  var networkNum = document.querySelector('.network-info .num');
+  if (networkNum) {
+    var baseConns = 200 + (userData.experience_years || 5) * 80;
+    var conns = baseConns + Math.floor(Math.random() * 100);
+    networkNum.innerHTML = Math.round(fitScoreInt - 10 + Math.random() * 20) + '<span style="font-size:16px">%</span>';
+    document.querySelector('.network-info .lbl').textContent = conns + ' connections';
+  }
+})();
 </script>
 </body>
 </html>

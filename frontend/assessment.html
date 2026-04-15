@@ -954,33 +954,35 @@
     var celeb = document.getElementById('celebration');
     celeb.classList.add('show');
 
-    // Try API
-    var baseUrl = window.location.origin === 'file://' || !window.location.port
-      ? 'http://localhost:8081/v1' : window.location.origin + '/v1';
+    // Save to localStorage (demo mode for launch)
+    var userId = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2,9);
+    formData.id = userId;
+    formData.created_at = new Date().toISOString();
+    localStorage.setItem('signal_user_id', userId);
+    localStorage.setItem('signal_user_data', JSON.stringify(formData));
 
-    fetch(baseUrl + '/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.id) {
-        localStorage.setItem('signal_user_id', data.id);
-        localStorage.setItem('signal_user_data', JSON.stringify(data));
-      }
-      setTimeout(function() {
-        window.location.href = 'probability.html';
-      }, 2500);
-    })
-    .catch(function() {
-      // Demo mode: proceed anyway
-      localStorage.setItem('signal_user_id', 'demo-' + Date.now());
-      localStorage.setItem('signal_user_data', JSON.stringify(formData));
-      setTimeout(function() {
-        window.location.href = 'probability.html';
-      }, 2500);
-    });
+    // Try API if available (localhost backend)
+    var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocal) {
+      var baseUrl = window.location.origin + '/v1';
+      fetch(baseUrl + '/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.id) {
+          localStorage.setItem('signal_user_id', data.id);
+          localStorage.setItem('signal_user_data', JSON.stringify(data));
+        }
+      })
+      .catch(function() { /* demo mode already saved */ });
+    }
+
+    setTimeout(function() {
+      window.location.href = 'probability.html';
+    }, 2500);
   };
 
   // Reveal animation
