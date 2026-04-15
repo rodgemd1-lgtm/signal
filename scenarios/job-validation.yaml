@@ -1,0 +1,68 @@
+id: job-validation
+description: Verify request validation returns 400 for invalid job input
+type: functional
+tier: 1
+satisfaction_criteria: Invalid requests are rejected with 400 and an error message
+
+setup:
+  - description: Create a user for job ownership
+    request:
+      method: POST
+      path: /users
+      body:
+        email: "jv@rig.ai"
+        name: "Validation Tester"
+    capture:
+      - name: user_id
+        jsonpath: $.id
+
+steps:
+  - description: Create job with missing title
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "linkedin"
+        company: "Test Co"
+        user_id: "{user_id}"
+    expect: "Status 400. Response body contains an 'error' field."
+
+  - description: Create job with missing company
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "indeed"
+        title: "AI Engineer"
+        user_id: "{user_id}"
+    expect: "Status 400. Response body contains an 'error' field."
+
+  - description: Create job with invalid source
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "tiktok"
+        title: "AI Engineer"
+        company: "Test Co"
+        user_id: "{user_id}"
+    expect: "Status 400. Response body contains an 'error' field."
+
+  - description: Update job status with invalid value
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "linkedin"
+        title: "AI Engineer"
+        company: "Test Co"
+        user_id: "{user_id}"
+    capture:
+      - name: job_id
+        jsonpath: $.id
+    request:
+      method: PATCH
+      path: /jobs/{job_id}/status
+      body:
+        status: "teleported"
+    expect: "Status 400. Response body contains an 'error' field."

@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+backend/server
+*.exe
+
+# Logs
+runs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Vercel
+.vercel/
+
+# Environment
+.env
+.env.local

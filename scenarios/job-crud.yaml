@@ -1,0 +1,71 @@
+id: job-crud
+description: Create, read, update, and delete a job listing
+type: functional
+tier: 1
+satisfaction_criteria: All CRUD operations return correct status codes and response bodies
+
+setup:
+  - description: Create a user for job ownership
+    request:
+      method: POST
+      path: /users
+      body:
+        email: "jobtest@rig.ai"
+        name: "Job Tester"
+        location_preference: "remote"
+    capture:
+      - name: user_id
+        jsonpath: $.id
+  - description: Create a job listing
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "linkedin"
+        title: "Chief AI Officer"
+        company: "Acme Health"
+        location: "Denver, CO"
+        location_type: "remote"
+        salary_min: 250000
+        salary_max: 400000
+        description: "Lead AI strategy across the organization. Healthcare experience preferred."
+        url: "https://linkedin.com/jobs/123"
+        user_id: "{user_id}"
+    capture:
+      - name: job_id
+        jsonpath: $.id
+
+steps:
+  - description: Read the created job
+    request:
+      method: GET
+      path: /jobs/{job_id}
+    expect: "Status 200. Response body contains title 'Chief AI Officer', company 'Acme Health', source 'linkedin', location_type 'remote', status 'new', and fit_score is null. Response has id and discovered_at fields."
+
+  - description: Update the job title
+    request:
+      method: PUT
+      path: /jobs/{job_id}
+      body:
+        title: "VP of AI"
+    expect: "Status 200. Response body contains title 'VP of AI'. The id should remain the same."
+
+  - description: Update job status to interested
+    request:
+      method: PATCH
+      path: /jobs/{job_id}/status
+      body:
+        status: "interested"
+    expect: "Status 200. Response body contains status 'interested'."
+
+  - description: Delete the job
+    request:
+      method: DELETE
+      path: /jobs/{job_id}
+    expect: "Status 204. Response body should be empty or absent."
+
+  - description: Verify delete
+    request:
+      method: GET
+      path: /jobs/{job_id}
+    expect: "Status 404."

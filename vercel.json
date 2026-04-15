@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/", "dest": "/frontend/index.html" },
+    { "src": "/assessment", "dest": "/frontend/assessment.html" },
+    { "src": "/dashboard", "dest": "/frontend/probability.html" },
+    { "src": "/coach", "dest": "/frontend/coach.html" },
+    { "src": "/tracker", "dest": "/frontend/applications.html" },
+    { "src": "/styles.css", "dest": "/frontend/styles.css" },
+    { "src": "/app.js", "dest": "/frontend/app.js" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
+  ]
+}

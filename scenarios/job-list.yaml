@@ -1,0 +1,79 @@
+id: job-list-filter-sort
+description: Create multiple jobs and verify list endpoint with filtering and sorting
+type: functional
+tier: 2
+satisfaction_criteria: List endpoint returns filtered/sorted results with correct total count
+
+setup:
+  - description: Create a user
+    request:
+      method: POST
+      path: /users
+      body:
+        email: "listtest@rig.ai"
+        name: "List Tester"
+        location_preference: "remote"
+    capture:
+      - name: user_id
+        jsonpath: $.id
+  - description: Create first job
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "linkedin"
+        title: "CAIO"
+        company: "Health Corp"
+        location_type: "remote"
+        salary_min: 280000
+        salary_max: 400000
+        user_id: "{user_id}"
+  - description: Create second job
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "indeed"
+        title: "VP AI"
+        company: "Tech Startup"
+        location_type: "hybrid"
+        salary_min: 200000
+        salary_max: 300000
+        user_id: "{user_id}"
+  - description: Create third job
+    request:
+      method: POST
+      path: /jobs
+      body:
+        source: "greenhouse"
+        title: "Head of AI"
+        company: "Finance Co"
+        location_type: "onsite"
+        salary_min: 250000
+        salary_max: 350000
+        user_id: "{user_id}"
+
+steps:
+  - description: List all jobs for user
+    request:
+      method: GET
+      path: /jobs?user_id={user_id}
+    expect: "Status 200. Response has 'jobs' array with at least 3 items and 'total' field >= 3. Each job has id, title, company, and discovered_at fields."
+
+  - description: Filter by location_type remote
+    request:
+      method: GET
+      path: /jobs?user_id={user_id}&location_type=remote
+    expect: "Status 200. Response has 'jobs' array containing only jobs with location_type 'remote'. Total field reflects count of remote jobs."
+
+  - description: Filter by status new
+    request:
+      method: GET
+      path: /jobs?user_id={user_id}&status=new
+    expect: "Status 200. Response has 'jobs' array containing only jobs with status 'new'. All items have status 'new'."
+
+  - description: Paginate with limit 2
+    request:
+      method: GET
+      path: /jobs?user_id={user_id}&limit=2&offset=0
+    expect: "Status 200. Response has 'jobs' array with exactly 2 items. Response has 'total' field that is an integer >= 3."

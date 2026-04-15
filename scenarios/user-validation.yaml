@@ -1,0 +1,33 @@
+id: user-validation
+description: Verify request validation returns 400 for invalid user input
+type: functional
+tier: 1
+satisfaction_criteria: Invalid requests are rejected with 400 and an error message
+
+steps:
+  - description: Create user with missing email
+    request:
+      method: POST
+      path: /users
+      body:
+        name: "No Email User"
+    expect: "Status 400. Response body contains an 'error' field."
+
+  - description: Create user with invalid email
+    request:
+      method: POST
+      path: /users
+      body:
+        email: "not-an-email"
+        name: "Bad Email User"
+    expect: "Status 400. Response body contains an 'error' field with a message about email."
+
+  - description: Create user with invalid location_preference
+    request:
+      method: POST
+      path: /users
+      body:
+        email: "test@test.com"
+        name: "Bad Location"
+        location_preference: "mars"
+    expect: "Status 400. Response body contains an 'error' field."

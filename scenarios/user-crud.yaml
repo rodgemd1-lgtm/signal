@@ -1,0 +1,45 @@
+id: user-profile-crud
+description: Create, read, update, and delete a user profile
+type: functional
+tier: 1
+satisfaction_criteria: All CRUD operations return correct status codes and response bodies
+
+setup:
+  - description: Create a user
+    request:
+      method: POST
+      path: /users
+      body:
+        email: "mike@rig.ai"
+        name: "Mike Rodgers"
+        title: "Chief AI Officer"
+        target_salary_min: 260000
+        target_salary_max: 437000
+        location_preference: "remote"
+        skills: ["AI Strategy", "Healthcare AI", "Platform Engineering"]
+        experience_years: 15
+        industry_preferences: ["Healthcare", "Technology"]
+    capture:
+      - name: user_id
+        jsonpath: $.id
+
+steps:
+  - description: Read the created user
+    request:
+      method: GET
+      path: /users/{user_id}
+    expect: "Status 200. Response body contains email 'mike@rig.ai', name 'Mike Rodgers', title 'Chief AI Officer', location_preference 'remote', and target_salary_min 260000. Response has id and created_at fields."
+
+  - description: Update the user title
+    request:
+      method: PUT
+      path: /users/{user_id}
+      body:
+        title: "VP AI Strategy"
+    expect: "Status 200. Response body contains title 'VP AI Strategy'. The id should remain the same. updated_at should be different from created_at."
+
+  - description: Verify update persisted
+    request:
+      method: GET
+      path: /users/{user_id}
+    expect: "Status 200. Response body contains title 'VP AI Strategy'."

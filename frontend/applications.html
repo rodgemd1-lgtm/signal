@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Journey — SIGNAL.</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg-void)}
+.page-wrapper{padding-top:88px;min-height:100vh}
+.container{max-width:1100px;margin:0 auto;padding:0 24px 80px}
+
+.journey-header{margin-bottom:36px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.journey-header h1{font-size:clamp(26px,4vw,40px);font-weight:800;color:var(--text-primary);margin:0}
+.journey-header p{font-size:15px;color:var(--text-secondary);margin:4px 0 0}
+.journey-count{font-size:15px;color:var(--text-secondary);padding:8px 16px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:30px;backdrop-filter:var(--glass-blur)}
+.journey-count strong{color:var(--color-trust);font-weight:700;font-family:JetBrains Mono,monospace}
+
+/* Filter Bar */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.filter-pill{padding:8px 18px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:30px;color:var(--text-secondary);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;backdrop-filter:var(--glass-blur)}
+.filter-pill:hover,.filter-pill.active{background:var(--color-trust-dim);border-color:var(--color-trust);color:var(--color-trust)}
+.filter-pill .count{font-family:JetBrains Mono,monospace;font-size:12px;margin-left:4px}
+
+/* Card Grid */
+.card-list{display:flex;flex-direction:column;gap:12px}
+
+.app-card{display:flex;align-items:stretch;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:14px;overflow:hidden;opacity:0;transform:translateY(12px);transition:all 0.3s var(--ease-out);backdrop-filter:var(--glass-blur)}
+.app-card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,0.3)}
+.app-card.visible{opacity:1;transform:translateY(0)}
+.app-card.rejected{opacity:0.6}
+.app-card.rejected:hover{opacity:0.8}
+
+.status-bar{width:5px;flex-shrink:0;background:var(--color-trust);transition:background 0.2s}
+.status-new {background:#94a3b8}
+.status-viewed{background:#3b82f6}
+.status-interested,.status-applied{background:#10b981}
+.status-interviewing,.status-screening{background:#a855f7}
+.status-offered,.status-offer{background:#00ff88}
+.status-rejected{background:#ef4444}
+
+.card-body{flex:1;padding:18px 20px;cursor:pointer}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.card-title{font-size:17px;font-weight:700;color:var(--text-primary);margin:0 0 2px}
+.card-company{font-size:14px;color:var(--text-secondary);margin:0}
+.card-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+.card-meta span{font-size:13px;color:var(--text-muted)}
+.card-meta span strong{color:var(--text-primary);font-family:JetBrains Mono,monospace}
+
+.card-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;text-align:right;padding:18px 20px 18px 0;gap:8px;min-width:90px}
+.fit-score{font-size:26px;font-weight:800;font-family:JetBrains Mono,monospace;line-height:1}
+.fit-score.hi{color:var(--color-growth)}
+.fit-score.mid{color:var(--color-trust)}
+.fit-score.lo{color:var(--text-muted)}
+.status-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em}
+
+/* Recovery */
+.recovery-card{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);border-radius:14px;padding:20px 24px;margin-bottom:20px;text-align:center}
+.recovery-title{font-size:17px;font-weight:700;color:var(--color-recovery);margin:0 0 8px}
+.recovery-text{font-size:14px;color:var(--text-secondary);margin:0 0 12px}
+.recovery-tips{display:flex;flex-direction:column;gap:6px;margin-top:12px;text-align:left}
+.recovery-tip{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-primary)}
+.recovery-tip::before{content:'→';color:var(--color-growth);font-weight:700}
+
+/* Offer Banner */
+.offer-banner{background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(0,255,136,0.08));border:1px solid rgba(251,191,36,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:24px;display:none}
+.offer-banner.show{display:block;animation:glow-in 0.6s var(--ease-out)}
+@keyframes glow-in{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.offer-banner h2{font-size:24px;font-weight:800;color:var(--color-achievement);margin:0 0 8px}
+.offer-banner p{font-size:16px;color:var(--text-secondary);margin:0}
+.offer-banner strong{color:var(--color-achievement)}
+.offer-company{font-size:14px;color:var(--text-muted);margin-top:6px}
+
+/* Empty State */
+.empty-state{text-align:center;padding:80px 24px}
+.empty-icon{font-size:64px;opacity:0.4;margin-bottom:20px}
+.empty-title{font-size:28px;font-weight:700;color:var(--text-primary);margin:0 0 12px}
+.empty-sub{font-size:16px;color:var(--text-secondary);margin:0 0 28px}
+.empty-cta{display:inline-block;padding:14px 28px;background:linear-gradient(135deg,var(--color-trust),var(--color-growth));border-radius:12px;color:#fff;font-size:15px;font-weight:600;text-decoration:none;transition:all 0.2s}
+.empty-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--color-trust-glow)}
+
+/* Stage dots visualization */
+.stage-dots{display:flex;gap:4px;margin-top:8px}
+.stage-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.1)}
+.stage-dot.active{background:var(--color-trust)}
+.stage-dot.interviewing{background:#a855f7}
+.stage-dot.offered{background:#00ff88}
+
+/* Silence alert */
+.silence-alert{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:none}
+.silence-alert.show{display:flex;align-items:center;gap:14px}
+.silence-alert .icon{font-size:22px;flex-shrink:0}
+.silence-alert .text{font-size:14px;color:var(--text-secondary)}
+.silence-alert .text strong{color:var(--color-achievement)}
+.silence-alert .cta{padding:8px 16px;background:transparent;border:1px solid var(--color-achievement);border-radius:8px;color:var(--color-achievement);font-size:13px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all 0.2s}
+.silence-alert .cta:hover{background:var(--color-achievement-dim)}
+
+@media(max-width:600px){.card-right{padding:12px;min-width:70px}.fit-score{font-size:20px}}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loading-content">
+    <div class="loading-logo">SIGNAL<span class="loading-dot">.</span></div>
+    <div class="loading-text">Loading your journey<span class="loading-dots"></span></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo-link"><span class="logo">SIGNAL<span class="logo-accent">.</span></span></a>
+    <div class="nav-links">
+      <a href="assessment.html">Assessment</a>
+      <a href="probability.html">Dashboard</a>
+      <a href="coach.html">Coach</a>
+      <a href="applications.html" class="active">Tracker</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<main class="page-wrapper">
+  <div class="container">
+
+    <div class="journey-header animate-in">
+      <div>
+        <h1>Your Journey</h1>
+        <p>Every step forward counts.</p>
+      </div>
+      <div class="journey-count">
+        <strong>7</strong> roles in motion
+      </div>
+    </div>
+
+    <!-- Offer Banner -->
+    <div class="offer-banner" id="offerBanner">
+      <div>
+        <h2>You have an offer.</h2>
+        <p>HealthTech Systems sees what we see. <strong>You're the one.</strong></p>
+        <div class="offer-company">CAIO — HealthTech Systems · $280K — $320K</div>
+      </div>
+    </div>
+
+    <!-- Silence Alert -->
+    <div class="silence-alert" id="silenceAlert">
+      <div class="icon">&#9201;</div>
+      <div class="text"><strong>3 roles haven't moved in 7+ days.</strong> A follow-up message can help.</div>
+      <button class="cta">Send follow-up &rarr;</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar" id="filterBar">
+      <div class="filter-pill active" data-filter="all">All <span class="count">7</span></div>
+      <div class="filter-pill" data-filter="applied">Applied <span class="count">4</span></div>
+      <div class="filter-pill" data-filter="interviewing">Interviewing <span class="count">2</span></div>
+      <div class="filter-pill" data-filter="offered">Offer <span class="count">1</span></div>
+      <div class="filter-pill" data-filter="rejected">Not a match <span class="count">1</span></div>
+    </div>
+
+    <!-- Card List -->
+    <div class="card-list" id="cardList">
+
+      <!-- Interviewing -->
+      <div class="app-card" data-status="interviewing">
+        <div class="status-bar status-interviewing"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-title">Chief AI Officer</div>
+              <div class="card-company">CareNet Health Systems</div>
+              <div class="card-meta">
+                <span><strong>Remote</strong></span>
+                <span>$280K — $340K</span>
+                <span>Applied 12 days ago</span>
+              </div>
+              <div class="stage-dots">
+                <div class="stage-dot active"></div>
+                <div class="stage-dot active"></div>
+                <div class="stage-dot interviewing active"></div>
+                <div class="stage-dot"></div>
+                <div class="stage-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="fit-score hi">89%</div>
+          <div class="status-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)">Interviewing</div>
+        </div>
+      </div>
+
+      <div class="app-card" data-status="interviewing">
+        <div class="status-bar status-interviewing"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-title">VP of AI Strategy</div>
+              <div class="card-company">HealthTech Systems</div>
+              <div class="card-meta">
+                <span><strong>Remote</strong></span>
+                <span>$240K — $340K</span>
+                <span>Applied 5 days ago</span>
+              </div>
+              <div class="stage-dots">
+                <div class="stage-dot active"></div>
+                <div class="stage-dot active"></div>
+                <div class="stage-dot interviewing active"></div>
+                <div class="stage-dot"></div>
+                <div class="stage-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="fit-score hi">92%</div>
+          <div class="status-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)">Interviewing</div>
+        </div>
+      </div>
+
+      <!-- Applied -->
+      <div class="app-card" data-status="applied">
+        <div class="status-bar status-interested"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-title">Director of AI Products</div>
+              <div class="card-company">MedMind AI</div>
+              <div class="card-meta">
+                <span><strong>Hybrid</strong></span>
+                <span>$180K — $240K</span>
+                <span>Applied 8 days ago</span>
+              </div>
+              <div class="stage-dots">
+                <div class="stage-dot active"></div>
+                <div class="stage-dot active"></div>
+                <div class="stage-dot"></div>
+                <div class="stage-dot"></div>
+                <div class="stage-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="fit-score mid">81%</div>
+          <div class="status-badge" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)">Applied</div>
+        </div>
+      </div>
+
+      <div class="app-card" data-status="applied">
+        <div class="status-bar status-interested"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-title">Senior AI Product Manager</div>
+              <div class="card-company">BrightPath Ventures</div>
+              <div class="card-meta">
+                <span><strong>Remote</strong></span>
+                <span>$160K — $200K</span>
+                <span>Applied 3 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="fit-score mid">74%</div>
+          <div class="status-badge" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)">In Review</div>
+        </div>
+      </div>
+
+      <div class="app-card" data-status="applied">
+        <div class="status-bar"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-title">AI Strategy Consultant</div>
+              <div class="card-company">McKinley Partners</div>
+              <div class="card-meta">
+                <span><strong>Remote</strong></span>
+                <span>$200/hr</span>
+                <span>Applied 2 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="fit-score hi">86%</div>
+          <div class="status-badge" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)">Applied</div>
+        </div>
+      </div>
+
+      <div class="app-card" data-status="applied">
+        <div class="status-bar"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-title">Head of AI Implementation</div>
+              <div class="card-company">Clara Health</div>
+              <div class="card-meta">
+                <span><strong>Hybrid</strong></span>
+                <span>$200K — $260K</span>
+                <span>Applied 1 day ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="fit-score mid">77%</div>
+          <div class="status-badge" style="background:var(--color-trust-dim);color:var(--color-trust);border:1px solid rgba(59,130,246,0.3)">New</div>
+        </div>
+      </div>
+
+      <!-- Not a Match -->
+      <div class="app-card rejected" data-status="rejected">
+        <div class="status-bar status-rejected"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-title">VP of Engineering — AI</div>
+              <div class="card-company">Fortuna Systems</div>
+              <div class="card-meta">
+                <span><strong>On-site</strong></span>
+                <span>$300K — $400K</span>
+                <span>Rejected 4 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="fit-score lo">62%</div>
+          <div class="status-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)">Not a match</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recovery Card (shown when "Not a match" filter active) -->
+    <div class="recovery-card" id="recoveryCard" style="display:none">
+      <div class="recovery-title">Not this time. But here's what to adjust.</div>
+      <div class="recovery-text">Your fit was 62% — the role prioritized deep ml-ops experience over healthcare AI. Here are stronger matches for your profile:</div>
+      <div class="recovery-tips">
+        <div class="recovery-tip">Apply to Chief AI Officer at CareNet — 89% fit. Healthcare AI is their priority.</div>
+        <div class="recovery-tip">Apply to VP AI Strategy at HealthTech — 92% fit. Your exact background.</div>
+        <div class="recovery-tip">Update your title to "Chief AI Officer" to attract $280K+ roles.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+(function() {
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var l = document.getElementById('loading');
+      l.classList.add('loaded');
+      setTimeout(function() { l.style.display = 'none'; }, 700);
+    }, 600);
+  });
+
+  if (window.SignalV20) { window.SignalV20.Nav.init(); }
+
+  // Card reveal
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.app-card').forEach(function(el, i) {
+    el.style.transitionDelay = (i * 60) + 'ms';
+    obs.observe(el);
+  });
+
+  // Filter
+  var currentFilter = 'all';
+  var cards = document.querySelectorAll('.app-card');
+
+  document.querySelectorAll('.filter-pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      document.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      currentFilter = this.dataset.filter;
+      filterCards();
+    });
+  });
+
+  function filterCards() {
+    var count = 0;
+    cards.forEach(function(card) {
+      var s = card.dataset.status;
+      var show = currentFilter === 'all' ||
+        (currentFilter === 'applied' && ['applied','interested','viewed','new'].includes(s)) ||
+        s === currentFilter;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) count++;
+    });
+
+    var rejected = currentFilter === 'rejected';
+    document.getElementById('recoveryCard').style.display = rejected ? 'block' : 'none';
+  }
+
+  // Silence alert
+  document.getElementById('silenceAlert').classList.add('show');
+
+  // Offer banner
+  document.getElementById('offerBanner').classList.add('show');
+})();
+</script>
+</body>
+</html>

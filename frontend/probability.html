@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — SIGNAL.</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--bg-void); }
+
+.page-wrapper { padding-top: 88px; min-height: 100vh; }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* Header */
+.dash-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+.dash-greeting h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: var(--text-primary); margin: 0 0 4px; }
+.dash-greeting p { font-size: 16px; color: var(--text-secondary); margin: 0; }
+.dash-greeting .updated { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+.dash-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Bento Grid */
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.b { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 24px; backdrop-filter: var(--glass-blur); transition: transform 0.3s var(--ease-out), box-shadow 0.3s; opacity: 0; transform: translateY(20px); }
+.b:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(59,130,246,0.1); }
+.b.visible { opacity: 1; transform: translateY(0); }
+
+/* Card sizes via grid-column/row */
+.c-score   { grid-column: span 4; grid-row: span 2; }
+.c-pipeline { grid-column: span 8; grid-row: span 1; }
+.c-topjob  { grid-column: span 4; grid-row: span 2; }
+.c-breakdown { grid-column: span 4; grid-row: span 2; }
+.c-tip     { grid-column: span 4; grid-row: span 1; }
+.c-market  { grid-column: span 4; grid-row: span 1; }
+.c-activity { grid-column: span 4; grid-row: span 1; }
+.c-network { grid-column: span 4; grid-row: span 1; }
+
+/* Score Circle */
+.score-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
+.score-circle-svg { width: 160px; height: 160px; transform: rotate(-90deg); margin-bottom: 16px; }
+.score-circle-svg .bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 10; }
+.score-circle-svg .fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.5s var(--ease-out); }
+.score-num { font-size: 48px; font-weight: 800; font-family: JetBrains Mono, monospace; line-height: 1; }
+.score-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; }
+.score-sub { font-size: 14px; color: var(--text-secondary); margin-top: 12px; }
+.score-sub strong { color: var(--color-growth); }
+
+/* Pipeline */
+.pipeline-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 16px; }
+.pipeline-stage { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.pipeline-dot { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--bg-surface); border-radius: 10px; border: 1px solid var(--bg-border); min-width: 90px; }
+.pipeline-dot .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.pipeline-dot .num { font-size: 20px; font-weight: 700; font-family: JetBrains Mono, monospace; color: var(--text-primary); }
+.pipeline-dot .lbl { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+.pipeline-sub { font-size: 14px; color: var(--color-growth); font-weight: 500; }
+
+/* Top Job */
+.topjob-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 12px; }
+.topjob-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 0 0 4px; }
+.topjob-company { font-size: 15px; color: var(--text-secondary); margin: 0 0 12px; }
+.topjob-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.topjob-meta span { font-size: 14px; color: var(--text-muted); }
+.topjob-meta span strong { color: var(--text-primary); font-family: JetBrains Mono, monospace; }
+.topjob-score { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--color-growth-dim); border: 1px solid var(--color-growth); border-radius: 20px; color: var(--color-growth); font-size: 14px; font-weight: 600; font-family: JetBrains Mono, monospace; margin-bottom: 20px; }
+.topjob-cta { display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, var(--color-trust) 0%, var(--color-growth) 100%); border-radius: 10px; color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s var(--ease-out); }
+.topjob-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--color-trust-glow); }
+.topjob-sub { font-size: 13px; color: var(--text-secondary); margin-top: 10px; }
+
+/* Breakdown */
+.breakdown-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 16px; }
+.breakdown-row { margin-bottom: 14px; }
+.breakdown-row:last-child { margin-bottom: 0; }
+.breakdown-meta { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.breakdown-meta .key { font-size: 13px; color: var(--text-secondary); }
+.breakdown-meta .val { font-size: 13px; color: var(--text-primary); font-family: JetBrains Mono, monospace; font-weight: 600; }
+.breakdown-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.breakdown-bar .fill { height: 100%; border-radius: 3px; transition: width 1.2s var(--ease-out); }
+
+/* Tip Card */
+.tip-gold { border-left: 3px solid var(--color-achievement) !important; }
+.tip-label { font-size: 12px; color: var(--color-achievement); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 12px; }
+.tip-headline { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0 0 10px; line-height: 1.4; }
+.tip-text { font-size: 14px; color: var(--text-secondary); margin: 0 0 14px; line-height: 1.6; }
+.tip-done { font-size: 13px; color: var(--color-growth); display: none; }
+.tip-done.show { display: block; }
+.tip-check { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; border: 1px solid var(--color-achievement); border-radius: 20px; color: var(--color-achievement); font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: Inter, sans-serif; }
+.tip-check:hover, .tip-check.done { background: var(--color-achievement-dim); }
+
+/* Market */
+.market-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px; }
+.market-stats { display: flex; flex-direction: column; gap: 10px; }
+.market-stat { display: flex; justify-content: space-between; align-items: center; }
+.market-stat .key { font-size: 13px; color: var(--text-secondary); }
+.market-stat .val { font-size: 16px; font-weight: 700; font-family: JetBrains Mono, monospace; color: var(--text-primary); }
+.market-stat .val.highlight { color: var(--color-growth); }
+
+/* Activity */
+.activity-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px; }
+.activity-list { display: flex; flex-direction: column; gap: 8px; }
+.activity-item { display: flex; align-items: center; gap: 10px; }
+.activity-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-surface-hover); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.activity-text { font-size: 13px; color: var(--text-secondary); flex: 1; }
+.activity-time { font-size: 12px; color: var(--text-muted); font-family: JetBrains Mono, monospace; }
+
+/* Network */
+.network-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px; }
+.network-gauge { display: flex; align-items: center; gap: 16px; }
+.network-gauge svg { width: 80px; height: 50px; }
+.network-info .num { font-size: 28px; font-weight: 700; font-family: JetBrains Mono, monospace; color: var(--text-primary); line-height: 1; }
+.network-info .lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.network-info .trend { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--color-growth); margin-top: 4px; }
+
+/* Empty State */
+.empty-state { text-align: center; padding: 80px 24px; }
+.empty-icon { font-size: 64px; margin-bottom: 24px; opacity: 0.5; }
+.empty-title { font-size: 28px; font-weight: 700; color: var(--text-primary); margin: 0 0 12px; }
+.empty-sub { font-size: 16px; color: var(--text-secondary); margin: 0 0 28px; max-width: 400px; margin-left: auto; margin-right: auto; }
+.empty-cta { display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, var(--color-trust), var(--color-growth)); border-radius: 12px; color: #fff; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+.empty-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--color-trust-glow); }
+
+/* Scroll reveal */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.glass-btn-ghost { padding: 10px 20px; background: transparent; border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; font-family: Inter, sans-serif; }
+.glass-btn-ghost:hover { border-color: var(--text-primary); color: var(--text-primary); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .c-score { grid-column: span 12; grid-row: span 1; }
+  .c-pipeline { grid-column: span 12; }
+  .c-topjob { grid-column: span 12; }
+  .c-breakdown { grid-column: span 12; }
+  .c-tip { grid-column: span 12; }
+  .c-market { grid-column: span 12; }
+  .c-activity { grid-column: span 12; }
+  .c-network { grid-column: span 12; }
+}
+@media (max-width: 600px) {
+  .dash-header { flex-direction: column; }
+  .bento { gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loading-content">
+    <div class="loading-logo">SIGNAL<span class="loading-dot">.</span></div>
+    <div class="loading-text">Building your landscape<span class="loading-dots"></span></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo-link"><span class="logo">SIGNAL<span class="logo-accent">.</span></span></a>
+    <div class="nav-links">
+      <a href="assessment.html">Assessment</a>
+      <a href="probability.html" class="active">Dashboard</a>
+      <a href="coach.html">Coach</a>
+      <a href="applications.html">Tracker</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<main class="page-wrapper">
+  <div class="container" id="mainContent">
+
+    <div class="dash-header animate-in">
+      <div class="dash-greeting">
+        <h1 id="greetingText">Good morning, Mike.</h1>
+        <p>Here's your landscape.</p>
+        <p class="updated">Updated just now</p>
+      </div>
+      <div class="dash-actions">
+        <a href="assessment.html" class="glass-btn-ghost">Retake assessment</a>
+      </div>
+    </div>
+
+    <!-- Bento Grid -->
+    <div class="bento">
+
+      <!-- Score Circle -->
+      <div class="b c-score" data-delay="0">
+        <div class="score-wrap">
+          <svg class="score-circle-svg" viewBox="0 0 160 160">
+            <circle class="bg" cx="80" cy="80" r="70"/>
+            <circle class="fill" id="scoreArc" cx="80" cy="80" r="70"
+              stroke="url(#scoreGrad)"
+              stroke-dasharray="439.82"
+              stroke-dashoffset="439.82"/>
+            <defs>
+              <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#10b981"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="score-num" id="scoreNum" data-count="87">0<span style="font-size:24px">%</span></div>
+          <div class="score-label">Your Fit Score</div>
+          <div class="score-sub">Your strongest match this <strong>week</strong></div>
+        </div>
+      </div>
+
+      <!-- Pipeline -->
+      <div class="b c-pipeline" data-delay="80">
+        <div class="pipeline-title">Your Pipeline</div>
+        <div class="pipeline-stage">
+          <div class="pipeline-dot"><span class="dot" style="background:#3b82f6"></span><span class="num">3</span><span class="lbl">New</span></div>
+          <div class="pipeline-dot"><span class="dot" style="background:#3b82f6"></span><span class="num">2</span><span class="lbl">Viewed</span></div>
+          <div class="pipeline-dot"><span class="dot" style="background:#10b981"></span><span class="num">1</span><span class="lbl">Interviewing</span></div>
+          <div class="pipeline-dot"><span class="dot" style="background:#a855f7"></span><span class="num">1</span><span class="lbl">Offer</span></div>
+        </div>
+        <div class="pipeline-sub">Your pipeline is building. 3 applications in active review.</div>
+      </div>
+
+      <!-- Top Match -->
+      <div class="b c-topjob" data-delay="160">
+        <div class="topjob-label">Your Top Match</div>
+        <div class="topjob-title">VP of AI Strategy</div>
+        <div class="topjob-company">HealthTech Systems</div>
+        <div class="topjob-meta">
+          <span><strong>Remote</strong></span>
+          <span><strong>$240K — $340K</strong></span>
+        </div>
+        <div class="topjob-score">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          92% Fit
+        </div>
+        <a href="applications.html" class="topjob-cta">View position &rarr;</a>
+        <div class="topjob-sub">HealthTech Systems values your healthcare AI background.</div>
+      </div>
+
+      <!-- Score Breakdown -->
+      <div class="b c-breakdown" data-delay="240">
+        <div class="breakdown-title">How Your Score Breaks Down</div>
+        <div class="breakdown-row">
+          <div class="breakdown-meta"><span class="key">Skills Match</span><span class="val">87%</span></div>
+          <div class="breakdown-bar"><div class="fill" style="width:0;background:linear-gradient(90deg,#3b82f6,#10b981)" data-width="87"></div></div>
+        </div>
+        <div class="breakdown-row">
+          <div class="breakdown-meta"><span class="key">Salary Alignment</span><span class="val">92%</span></div>
+          <div class="breakdown-bar"><div class="fill" style="width:0;background:linear-gradient(90deg,#3b82f6,#10b981)" data-width="92"></div></div>
+        </div>
+        <div class="breakdown-row">
+          <div class="breakdown-meta"><span class="key">Location Fit</span><span class="val">80%</span></div>
+          <div class="breakdown-bar"><div class="fill" style="width:0;background:linear-gradient(90deg,#3b82f6,#10b981)" data-width="80"></div></div>
+        </div>
+        <div class="breakdown-row">
+          <div class="breakdown-meta"><span class="key">Seniority Match</span><span class="val">85%</span></div>
+          <div class="breakdown-bar"><div class="fill" style="width:0;background:linear-gradient(90deg,#3b82f6,#10b981)" data-width="85"></div></div>
+        </div>
+        <div class="breakdown-row">
+          <div class="breakdown-meta"><span class="key">Industry Fit</span><span class="val">91%</span></div>
+          <div class="breakdown-bar"><div class="fill" style="width:0;background:linear-gradient(90deg,#3b82f6,#10b981)" data-width="91"></div></div>
+        </div>
+      </div>
+
+      <!-- Coaching Tip -->
+      <div class="b c-tip tip-gold" data-delay="320">
+        <div class="tip-label">This Week's Focus</div>
+        <div class="tip-headline">Your highest-impact move this week</div>
+        <div class="tip-text">Your network is your moat. 70% of executive roles are filled through relationships before they're posted. Reach out to Sarah at HealthTech — your healthcare AI background is exactly what she needs.</div>
+        <button class="tip-check" id="tipCheck" onclick="markTipDone(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Mark as done
+        </button>
+        <div class="tip-done" id="tipDone">You showed up this week. That matters.</div>
+      </div>
+
+      <!-- Market Overview -->
+      <div class="b c-market" data-delay="400">
+        <div class="market-title">Market Overview</div>
+        <div class="market-stats">
+          <div class="market-stat"><span class="key">Roles matching your profile</span><span class="val" data-count="287">287</span></div>
+          <div class="market-stat"><span class="key">Average salary for your level</span><span class="val highlight" data-count="210">$210K</span></div>
+          <div class="market-stat"><span class="key">Top growth category</span><span class="val">AI Healthcare</span></div>
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="b c-activity" data-delay="480">
+        <div class="activity-title">Recent Activity</div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <span class="activity-text">Applied to VP AI Strategy — HealthTech Systems</span>
+            <span class="activity-time">2h ago</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+            <span class="activity-text">Profile score updated: 87%</span>
+            <span class="activity-time">6h ago</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <span class="activity-text">287 new matching roles found</span>
+            <span class="activity-time">1d ago</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <span class="activity-text">Interview scheduled: CAIO — CareNet</span>
+            <span class="activity-time">2d ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Network -->
+      <div class="b c-network" data-delay="560">
+        <div class="network-title">Network Strength</div>
+        <div class="network-gauge">
+          <svg viewBox="0 0 80 50">
+            <path d="M 10 45 A 35 35 0 0 1 70 45" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 10 45 A 35 35 0 0 1 70 45" fill="none" stroke="url(#netGrad)" stroke-width="6" stroke-linecap="round" id="netArc"
+              stroke-dasharray="110" stroke-dashoffset="110"/>
+            <defs><linearGradient id="netGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#10b981"/>
+            </linearGradient></defs>
+          </svg>
+          <div class="network-info">
+            <div class="num">74<span style="font-size:16px">%</span></div>
+            <div class="lbl">847 connections</div>
+            <div class="trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>+12 this month</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty State (hidden unless no user) -->
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-icon">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(59,130,246,0.4)" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </div>
+    <h2 class="empty-title">Let's build your landscape.</h2>
+    <p class="empty-sub">Complete the assessment and we'll show you where you stand — and where you could go.</p>
+    <a href="assessment.html" class="empty-cta">Take the assessment &rarr;</a>
+  </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+(function() {
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var loading = document.getElementById('loading');
+      loading.classList.add('loaded');
+      setTimeout(function() { loading.style.display = 'none'; }, 700);
+    }, 600);
+  });
+
+  if (window.SignalV20) { window.SignalV20.Nav.init(); }
+
+  // Check user
+  var userId = localStorage.getItem('signal_user_id');
+  if (!userId) {
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  }
+
+  // Greeting
+  var h = new Date().getHours();
+  var g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  var stored = localStorage.getItem('signal_user_data');
+  var name = stored ? JSON.parse(stored).name : 'Mike Rodgers';
+  if (name) name = name.split(' ')[0];
+  document.getElementById('greetingText').textContent = g + ', ' + name + '.';
+
+  // Card reveal
+  var bentoObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        var el = e.target;
+        var delay = parseInt(el.dataset.delay || '0', 10);
+        setTimeout(function() { el.classList.add('visible'); }, delay);
+        bentoObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.b').forEach(function(el) {
+    bentoObserver.observe(el);
+  });
+
+  // Score arc animation
+  var scoreObserved = false;
+  var scoreObserver = new IntersectionObserver(function(entries) {
+    if (scoreObserved) return;
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        scoreObserved = true;
+        animateScore();
+        animateBars();
+        animateCount();
+        animateNetwork();
+        scoreObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  var scoreArc = document.getElementById('scoreArc');
+  if (scoreArc) scoreObserver.observe(scoreArc.parentElement.parentElement);
+
+  function animateScore() {
+    var target = 87;
+    var circumference = 439.82;
+    var el = document.getElementById('scoreNum');
+    var arc = document.getElementById('scoreArc');
+    var start = performance.now();
+    var duration = 1500;
+
+    function tick(now) {
+      var t = Math.min((now - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - t, 4);
+      var current = Math.round(eased * target);
+      el.innerHTML = current + '<span style="font-size:24px">%</span>';
+      arc.style.strokeDashoffset = circumference * (1 - eased * target / 100);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function animateBars() {
+    setTimeout(function() {
+      document.querySelectorAll('.breakdown-bar .fill').forEach(function(bar) {
+        bar.style.width = bar.dataset.width + '%';
+      });
+    }, 600);
+  }
+
+  function animateCount() {
+    document.querySelectorAll('[data-count]').forEach(function(el) {
+      var target = parseFloat(el.dataset.count);
+      if (isNaN(target)) return;
+      var start = performance.now();
+      var duration = 1200;
+      var prefix = el.textContent.startsWith('$') ? '$' : '';
+      var suffix = el.textContent.endsWith('K') ? 'K' : '';
+      var origText = el.textContent;
+
+      function tick(now) {
+        var t = Math.min((now - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - t, 4);
+        var current = Math.round(eased * target);
+        if (prefix === '$' && !isNaN(target) && target >= 100) {
+          el.textContent = '$' + current + 'K';
+        } else {
+          el.textContent = current;
+        }
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function animateNetwork() {
+    setTimeout(function() {
+      var arc = document.getElementById('netArc');
+      if (arc) arc.style.strokeDashoffset = 110 * (1 - 0.74);
+    }, 400);
+  }
+
+  // Tip done
+  window.markTipDone = function(btn) {
+    if (btn.classList.contains('done')) return;
+    btn.classList.add('done');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Done';
+    document.getElementById('tipDone').classList.add('show');
+    localStorage.setItem('signal_tip_done_' + (new Date().getMonth() + '-' + new Date().getDate()), 'true');
+  };
+
+  // Check if tip already done today
+  var tipDone = localStorage.getItem('signal_tip_done_' + (new Date().getMonth() + 1 + '-' + new Date().getDate()));
+  if (tipDone) {
+    var btn = document.getElementById('tipCheck');
+    btn.classList.add('done');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Done';
+    document.getElementById('tipDone').classList.add('show');
+  }
+})();
+</script>
+</body>
+</html>

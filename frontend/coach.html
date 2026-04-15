@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coach — SIGNAL.</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg-void)}
+.page-wrapper{padding-top:88px;min-height:100vh}
+.container{max-width:1100px;margin:0 auto;padding:0 24px 80px}
+.coach-header{margin-bottom:40px}
+.coach-header h1{font-size:clamp(26px,4vw,40px);font-weight:800;color:var(--text-primary);margin:0 0 6px}
+.coach-header p{font-size:17px;color:var(--text-secondary);margin:0}
+
+/* Weekly Focus — Gold Accent */
+.focus-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-left:4px solid var(--color-achievement);border-radius:16px;padding:32px;backdrop-filter:var(--glass-blur);margin-bottom:40px;opacity:0;transform:translateY(20px);transition:all 0.5s}
+.focus-card.visible{opacity:1;transform:translateY(0)}
+.focus-label{font-size:12px;color:var(--color-achievement);text-transform:uppercase;letter-spacing:0.12em;margin:0 0 12px;font-weight:600}
+.focus-headline{font-size:clamp(18px,3vw,24px);font-weight:700;color:var(--text-primary);margin:0 0 16px;line-height:1.3}
+.focus-text{font-size:16px;color:var(--text-secondary);margin:0 0 20px;line-height:1.7}
+.focus-why{font-size:14px;color:var(--text-muted);font-style:italic;margin:0 0 20px}
+.focus-done{border:1px solid var(--color-achievement);border-radius:30px;padding:10px 22px;background:transparent;color:var(--color-achievement);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:8px}
+.focus-done:hover,.focus-done.done{background:var(--color-achievement-dim)}
+.focus-done.done{pointer-events:none}
+.focus-celebration{color:var(--color-growth);font-size:15px;margin-top:14px;display:none}
+.focus-celebration.show{display:block}
+
+/* Persona + Actions Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
+
+/* Glass Card Base */
+.g-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:16px;padding:24px;backdrop-filter:var(--glass-blur);opacity:0;transform:translateY(20px);transition:all 0.4s var(--ease-out)}
+.g-card.visible{opacity:1;transform:translateY(0)}
+.g-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.3)}
+
+.g-title{font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin:0 0 16px}
+
+/* Persona */
+.archetype{font-size:24px;font-weight:700;color:var(--text-primary);margin:0 0 6px}
+.archetype-sub{font-size:15px;color:var(--text-secondary);margin:0 0 20px}
+.trait{margin-bottom:12px}
+.trait:last-child{margin-bottom:0}
+.trait-meta{display:flex;justify-content:space-between;margin-bottom:4px}
+.trait-meta .key{font-size:13px;color:var(--text-secondary)}
+.trait-meta .val{font-size:13px;font-weight:600;font-family:JetBrains Mono,monospace;color:var(--text-primary)}
+.trait-bar{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.trait-bar .fill{height:100%;border-radius:3px;width:0;transition:width 1.2s var(--ease-out)}
+.roles{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.role-chip{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-surface);border-radius:10px;border:1px solid var(--bg-border)}
+.role-chip .name{font-size:14px;font-weight:500;color:var(--text-primary)}
+.role-chip .score{font-size:13px;font-weight:600;font-family:JetBrains Mono,monospace;color:var(--color-growth)}
+
+/* Actions */
+.progress-meta{display:flex;justify-content:space-between;margin-bottom:8px}
+.progress-meta .key{font-size:13px;color:var(--text-muted)}
+.progress-meta .val{font-size:13px;font-weight:600;color:var(--text-primary);font-family:JetBrains Mono,monospace}
+.progress-track-bar{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.progress-track-bar .fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--color-trust),var(--color-growth));width:0;transition:width 0.5s var(--ease-out)}
+.action-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg-surface);border:1px solid var(--bg-border);border-radius:12px;margin-bottom:10px;transition:all 0.2s;cursor:pointer}
+.action-item:last-child{margin-bottom:0}
+.action-item:hover{border-color:var(--color-trust)}
+.action-item.done{opacity:0.6}
+.action-item.done .action-text{text-decoration:line-through}
+.action-check{width:22px;height:22px;border:2px solid var(--bg-border);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;margin-top:2px}
+.action-item.done .action-check{background:var(--color-growth);border-color:var(--color-growth);box-shadow:0 0 10px var(--color-growth-glow)}
+.action-body{flex:1}
+.action-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.badge-high{background:rgba(251,191,36,0.15);color:var(--color-achievement);border:1px solid rgba(251,191,36,0.3)}
+.badge-med{background:var(--color-trust-dim);color:var(--color-trust);border:1px solid rgba(59,130,246,0.3)}
+.badge-low{background:rgba(255,255,255,0.04);color:var(--text-muted);border:1px solid var(--bg-border)}
+.action-text{font-size:15px;color:var(--text-primary);font-weight:500;line-height:1.4}
+.action-meta2{font-size:12px;color:var(--text-muted);margin-top:4px}
+.all-done-msg{text-align:center;padding:20px;text-align:center;color:var(--color-growth);font-size:16px;font-weight:600;display:none}
+
+/* Pipeline Mini */
+.pipeline-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}
+.pipeline-stat{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:14px;padding:16px;text-align:center;backdrop-filter:var(--glass-blur);opacity:0;transform:translateY(16px);transition:all 0.4s}
+.pipeline-stat.visible{opacity:1;transform:translateY(0)}
+.pipeline-stat .num{font-size:32px;font-weight:700;font-family:JetBrains Mono,monospace;color:var(--text-primary);line-height:1}
+.pipeline-stat .lbl{font-size:12px;color:var(--text-muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.06em}
+.pipeline-stat .dot{width:8px;height:8px;border-radius:50%;margin:0 auto 8px}
+
+/* Journey Timeline */
+.journey{max-width:600px;margin:0 auto 40px}
+.journey-title{text-align:center;font-size:20px;font-weight:700;color:var(--text-primary);margin:0 0 24px}
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:rgba(255,255,255,0.08)}
+.node{position:relative;margin-bottom:32px;padding-left:24px}
+.node::before{content:'';position:absolute;left:-28px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--bg-border);background:var(--bg-void)}
+.node.past::before{border-color:var(--text-muted);background:var(--text-muted)}
+.node.present::before{border-color:var(--color-trust);background:var(--color-trust);box-shadow:0 0 12px var(--color-trust-glow)}
+.node.future::before{border-color:var(--color-growth);background:var(--bg-void);animation:pulse-node 2s infinite}
+@keyframes pulse-node{0%,100%{box-shadow:0 0 0 0 var(--color-growth-glow)}50%{box-shadow:0 0 0 8px transparent}}
+.node-label{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px}
+.node.past .node-label{color:var(--text-muted)}
+.node.present .node-label{color:var(--color-trust)}
+.node.future .node-label{color:var(--color-growth)}
+.node-title{font-size:17px;font-weight:600;color:var(--text-primary);margin:0 0 4px}
+.node.past .node-title{color:var(--text-muted);text-decoration:none}
+.node.future .node-title{color:var(--text-primary)}
+.node-meta{font-size:13px;color:var(--text-muted)}
+
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}.pipeline-mini{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loading-content">
+    <div class="loading-logo">SIGNAL<span class="loading-dot">.</span></div>
+    <div class="loading-text">Preparing your coaching<span class="loading-dots"></span></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo-link"><span class="logo">SIGNAL<span class="logo-accent">.</span></span></a>
+    <div class="nav-links">
+      <a href="assessment.html">Assessment</a>
+      <a href="probability.html">Dashboard</a>
+      <a href="coach.html" class="active">Coach</a>
+      <a href="applications.html">Tracker</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<main class="page-wrapper">
+  <div class="container">
+
+    <div class="coach-header animate-in">
+      <h1>Your Career Coach</h1>
+      <p>One step at a time. Here's your highest-impact move this week.</p>
+    </div>
+
+    <!-- Weekly Focus -->
+    <div class="focus-card" id="focusCard">
+      <div class="focus-label">This Week's Focus</div>
+      <div class="focus-headline">Your highest-impact move this week</div>
+      <div class="focus-text">Reach out to Sarah Chen at HealthTech Systems. She leads AI strategy there, and your healthcare AI background is exactly what she's looking for in a senior partner. She posted 3 roles last quarter — all filled through warm connections. You're a warm connection she doesn't know about yet.</div>
+      <div class="focus-why">Why this matters: 70% of executive roles are filled before they're posted. This is how you get ahead of the posting.</div>
+      <button class="focus-done" id="focusDone" onclick="markFocusDone()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+        Mark as done
+      </button>
+      <div class="focus-celebration" id="focusCelebration">You showed up this week. That matters.</div>
+    </div>
+
+    <!-- Persona + Actions -->
+    <div class="grid-2">
+
+      <!-- Persona -->
+      <div class="g-card" data-delay="0">
+        <div class="g-title">Your Professional Archetype</div>
+        <div class="archetype">The Fixer</div>
+        <div class="archetype-sub">You find what's broken and make it better. You build the bridge others use.</div>
+        <div class="trait">
+          <div class="trait-meta"><span class="key">Openness</span><span class="val">88%</span></div>
+          <div class="trait-bar"><div class="fill" style="background:linear-gradient(90deg,#a855f7,#3b82f6)" data-width="88"></div></div>
+        </div>
+        <div class="trait">
+          <div class="trait-meta"><span class="key">Conscientiousness</span><span class="val">82%</span></div>
+          <div class="trait-bar"><div class="fill" style="background:linear-gradient(90deg,#3b82f6,#10b981)" data-width="82"></div></div>
+        </div>
+        <div class="trait">
+          <div class="trait-meta"><span class="key">Extraversion</span><span class="val">61%</span></div>
+          <div class="trait-bar"><div class="fill" style="background:linear-gradient(90deg,#3b82f6,#fbbf24)" data-width="61"></div></div>
+        </div>
+        <div class="trait">
+          <div class="trait-meta"><span class="key">Agreeableness</span><span class="val">71%</span></div>
+          <div class="trait-bar"><div class="fill" style="background:linear-gradient(90deg,#10b981,#3b82f6)" data-width="71"></div></div>
+        </div>
+        <div class="trait">
+          <div class="trait-meta"><span class="key">Emotional Stability</span><span class="val">66%</span></div>
+          <div class="trait-bar"><div class="fill" style="background:linear-gradient(90deg,#fbbf24,#ef4444)" data-width="66"></div></div>
+        </div>
+        <div class="roles">
+          <div class="role-chip"><span class="name">Chief AI Officer</span><span class="score">94% fit</span></div>
+          <div class="role-chip"><span class="name">VP of AI Strategy</span><span class="score">89% fit</span></div>
+          <div class="role-chip"><span class="name">Director of AI</span><span class="score">91% fit</span></div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="g-card" data-delay="100">
+        <div class="g-title">This Week's Actions</div>
+        <div class="progress-meta"><span class="key">This week</span><span class="val" id="actionCount">0 / 5</span></div>
+        <div class="progress-track-bar"><div class="fill" id="actionFill" style="width:0%"></div></div>
+
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="action-body">
+            <div class="action-meta"><span class="badge badge-high">High</span><span class="badge badge-med">Network</span></div>
+            <div class="action-text">Send a message to Sarah Chen on LinkedIn about AI strategy at HealthTech</div>
+            <div class="action-meta2">10 minutes — could change everything</div>
+          </div>
+        </div>
+
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="action-body">
+            <div class="action-meta"><span class="badge badge-med">Medium</span><span class="badge badge-med">Profile</span></div>
+            <div class="action-text">Update your LinkedIn headline to "Chief AI Officer | Building the Future of Healthcare"</div>
+            <div class="action-meta2">20 minutes — higher click-through rate</div>
+          </div>
+        </div>
+
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="action-body">
+            <div class="action-meta"><span class="badge badge-med">Medium</span><span class="badge badge-low">Research</span></div>
+            <div class="action-text">Research 3 AI healthcare companies that are Series B+ and hiring</div>
+            <div class="action-meta2">30 minutes — build your target list</div>
+          </div>
+        </div>
+
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="action-body">
+            <div class="action-meta"><span class="badge badge-med">Medium</span><span class="badge badge-low">Application</span></div>
+            <div class="action-text">Submit your application to the VP AI Strategy role at HealthTech Systems</div>
+            <div class="action-meta2">15 minutes — your 92% fit is worth it</div>
+          </div>
+        </div>
+
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="action-body">
+            <div class="action-meta"><span class="badge badge-low">Low</span><span class="badge badge-low">Interview</span></div>
+            <div class="action-text">Practice 3 STAR-method answers for "Tell me about a time you built a team"</div>
+            <div class="action-meta2">45 minutes — prepare like it matters</div>
+          </div>
+        </div>
+
+        <div class="all-done-msg" id="allDone">You did it. This week, you showed up. Next week, we go further.</div>
+      </div>
+    </div>
+
+    <!-- Pipeline Snapshot -->
+    <div class="pipeline-mini">
+      <div class="pipeline-stat" data-delay="0">
+        <div class="dot" style="background:#3b82f6"></div>
+        <div class="num">3</div>
+        <div class="lbl">Applied</div>
+      </div>
+      <div class="pipeline-stat" data-delay="80">
+        <div class="dot" style="background:#3b82f6"></div>
+        <div class="num">2</div>
+        <div class="lbl">In Review</div>
+      </div>
+      <div class="pipeline-stat" data-delay="160">
+        <div class="dot" style="background:#a855f7"></div>
+        <div class="num">1</div>
+        <div class="lbl">Interviewing</div>
+      </div>
+      <div class="pipeline-stat" data-delay="240">
+        <div class="dot" style="background:#10b981"></div>
+        <div class="num">1</div>
+        <div class="lbl">Offer</div>
+      </div>
+    </div>
+
+    <!-- Journey Timeline -->
+    <div class="journey">
+      <div class="journey-title">Your Career Journey</div>
+      <div class="timeline">
+        <div class="node past">
+          <div class="node-label">Past</div>
+          <div class="node-title">Started in Analytics</div>
+          <div class="node-meta">Built the foundation. Learned the data.</div>
+        </div>
+        <div class="node past">
+          <div class="node-label">Past</div>
+          <div class="node-title">Moved to Management</div>
+          <div class="node-meta">Led a team. Learned to build bridges.</div>
+        </div>
+        <div class="node present">
+          <div class="node-label">Now</div>
+          <div class="node-title">Director of AI Strategy</div>
+          <div class="node-meta">You are here. You built what they're using.</div>
+        </div>
+        <div class="node future">
+          <div class="node-label">Possible</div>
+          <div class="node-title">Chief AI Officer or VP AI</div>
+          <div class="node-meta">+3 months, +$50-120K. You're closer than you think.</div>
+        </div>
+        <div class="node future">
+          <div class="node-label">Possible</div>
+          <div class="node-title">Fractional AI Consultant</div>
+          <div class="node-meta">+6 months, independence. Your expertise commands a premium.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+(function() {
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var l = document.getElementById('loading');
+      l.classList.add('loaded');
+      setTimeout(function() { l.style.display = 'none'; }, 700);
+    }, 600);
+  });
+
+  if (window.SignalV20) { window.SignalV20.Nav.init(); }
+
+  // Card reveals
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        var delay = parseInt(e.target.dataset.delay || '0', 10);
+        setTimeout(function() { e.target.classList.add('visible'); }, delay);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('#focusCard, .g-card, .pipeline-stat').forEach(function(el) {
+    obs.observe(el);
+  });
+
+  // Trait bars
+  var traitObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        setTimeout(function() {
+          e.target.querySelectorAll('.fill').forEach(function(f) {
+            f.style.width = f.dataset.width + '%';
+          });
+        }, 400);
+        traitObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.g-card').forEach(function(el) { traitObs.observe(el); });
+
+  // Focus done
+  window.markFocusDone = function() {
+    var btn = document.getElementById('focusDone');
+    if (btn.classList.contains('done')) return;
+    btn.classList.add('done');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Done — you showed up';
+    document.getElementById('focusCelebration').classList.add('show');
+    localStorage.setItem('signal_focus_done', 'true');
+  };
+
+  if (localStorage.getItem('signal_focus_done')) {
+    var btn = document.getElementById('focusDone');
+    btn.classList.add('done');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Done — you showed up';
+    document.getElementById('focusCelebration').classList.add('show');
+  }
+
+  // Actions
+  var total = 5;
+  var completed = 0;
+
+  window.toggleAction = function(item) {
+    item.classList.toggle('done');
+    completed = document.querySelectorAll('.action-item.done').length;
+    document.getElementById('actionCount').textContent = completed + ' / ' + total;
+    document.getElementById('actionFill').style.width = (completed / total * 100) + '%';
+    if (completed === total) {
+      document.getElementById('allDone').style.display = 'block';
+    } else {
+      document.getElementById('allDone').style.display = 'none';
+    }
+    localStorage.setItem('signal_actions', JSON.stringify(
+      Array.from(document.querySelectorAll('.action-item')).map(function(el) {
+        return el.classList.contains('done');
+      })
+    ));
+  };
+
+  // Restore action state
+  var saved = localStorage.getItem('signal_actions');
+  if (saved) {
+    try {
+      var states = JSON.parse(saved);
+      document.querySelectorAll('.action-item').forEach(function(el, i) {
+        if (states[i]) el.classList.add('done');
+      });
+      completed = states.filter(Boolean).length;
+      document.getElementById('actionCount').textContent = completed + ' / ' + total;
+      document.getElementById('actionFill').style.width = (completed / total * 100) + '%';
+      if (completed === total) document.getElementById('allDone').style.display = 'block';
+    } catch(e) {}
+  }
+})();
+</script>
+</body>
+</html>
