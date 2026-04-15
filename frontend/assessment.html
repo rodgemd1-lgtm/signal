@@ -615,8 +615,8 @@
         <input class="glass-input" type="email" id="field-email" placeholder="you@email.com" autocomplete="email">
       </div>
       <div class="field-group">
-        <label class="field-label" for="field-title">Current title</label>
-        <input class="glass-input" type="text" id="field-title" placeholder="What do people call you at work?">
+        <label class="field-label" for="field-title">Your job title</label>
+        <input class="glass-input" type="text" id="field-title" placeholder="e.g. Director of AI Strategy, VP Engineering">
       </div>
 
       <div class="action-row">
@@ -669,11 +669,26 @@
           <label class="field-label">Target salary range</label>
           <span class="range-value" id="salaryRange">$100K — $200K</span>
         </div>
-        <div class="range-track">
-          <div class="range-fill" id="salaryFill" style="width:40%"></div>
+        <div style="margin-top:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:12px;color:var(--text-muted);font-family:JetBrains Mono,monospace">Floor</span>
+            <span style="font-size:13px;color:var(--color-trust);font-family:JetBrains Mono,monospace;font-weight:600" id="salaryMinLabel">$100K</span>
+          </div>
+          <div class="range-track">
+            <div class="range-fill" id="salaryMinFill" style="width:11%"></div>
+          </div>
+          <input type="range" id="salaryMin" min="50" max="500" value="100" step="10">
         </div>
-        <input type="range" id="salaryMin" min="50" max="500" value="100" step="10" style="margin-bottom:8px">
-        <input type="range" id="salaryMax" min="50" max="500" value="200" step="10">
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:12px;color:var(--text-muted);font-family:JetBrains Mono,monospace">Ceiling</span>
+            <span style="font-size:13px;color:var(--color-growth);font-family:JetBrains Mono,monospace;font-weight:600" id="salaryMaxLabel">$200K</span>
+          </div>
+          <div class="range-track">
+            <div class="range-fill" id="salaryMaxFill" style="width:33%"></div>
+          </div>
+          <input type="range" id="salaryMax" min="50" max="500" value="200" step="10">
+        </div>
       </div>
 
       <div class="field-group">
@@ -818,7 +833,7 @@
   // Navigate sections
   window.goSection = function(n) {
     if (n > currentSection) {
-      // Validate current
+      // Validate current section and capture data
       if (currentSection === 1) {
         formData.name = document.getElementById('field-name').value.trim();
         formData.email = document.getElementById('field-email').value.trim();
@@ -828,6 +843,24 @@
           else document.getElementById('field-email').focus();
           return;
         }
+      }
+      if (currentSection === 2) {
+        formData.skills = skills.slice();
+        formData.experience_years = parseInt(document.getElementById('expRange').value, 10);
+      }
+      if (currentSection === 3) {
+        formData.target_salary_min = parseInt(document.getElementById('salaryMin').value, 10) * 1000;
+        formData.target_salary_max = parseInt(document.getElementById('salaryMax').value, 10) * 1000;
+        var locRadio = document.querySelector('input[name="location"]:checked');
+        if (locRadio) formData.location_preference = locRadio.value;
+        var industries = [];
+        document.querySelectorAll('.check-item input[type="checkbox"]:checked').forEach(function(el) {
+          industries.push(el.nextElementSibling.textContent.trim());
+        });
+        formData.industry_preferences = industries;
+      }
+      if (currentSection === 4) {
+        formData.challenge = document.getElementById('field-challenge').value.trim();
       }
       // Populate review if going to 5
       if (n === 5) populateReview();
@@ -906,21 +939,44 @@
   var salaryMin = document.getElementById('salaryMin');
   var salaryMax = document.getElementById('salaryMax');
   var salaryRange = document.getElementById('salaryRange');
-  var salaryFill = document.getElementById('salaryFill');
+  var salaryMinFill = document.getElementById('salaryMinFill');
+  var salaryMaxFill = document.getElementById('salaryMaxFill');
+  var salaryMinLabel = document.getElementById('salaryMinLabel');
+  var salaryMaxLabel = document.getElementById('salaryMaxLabel');
 
   function updateSalary() {
     var min = parseInt(salaryMin.value, 10);
     var max = parseInt(salaryMax.value, 10);
     if (min > max) { min = max; salaryMin.value = min; }
     salaryRange.textContent = '$' + min + 'K \u2014 $' + max + 'K';
-    var pct = ((min / 50) + (max / 50)) / 2;
-    salaryFill.style.width = Math.min(pct, 100) + '%';
+    salaryMinLabel.textContent = '$' + min + 'K';
+    salaryMaxLabel.textContent = '$' + max + 'K';
+    salaryMinFill.style.width = ((min - 50) / 450 * 100) + '%';
+    salaryMaxFill.style.width = ((max - 50) / 450 * 100) + '%';
     formData.target_salary_min = min * 1000;
     formData.target_salary_max = max * 1000;
   }
 
   salaryMin.addEventListener('input', updateSalary);
   salaryMax.addEventListener('input', updateSalary);
+
+  // Location radios
+  document.querySelectorAll('input[name="location"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      formData.location_preference = this.value;
+    });
+  });
+
+  // Industry checkboxes
+  document.querySelectorAll('.check-item input[type="checkbox"]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var industries = [];
+      document.querySelectorAll('.check-item input[type="checkbox"]:checked').forEach(function(el) {
+        industries.push(el.nextElementSibling.textContent.trim());
+      });
+      formData.industry_preferences = industries;
+    });
+  });
 
   // Populate review
   function populateReview() {
