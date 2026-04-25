@@ -2349,7 +2349,12 @@
     }
   </style>
 </head>
-<body class="loading">
+<body class="loading has-oracle-banner">
+  <div class="oracle-banner" id="oracle-banner">
+    <span>✦ Free career intelligence for Oracle Health employees.</span>
+    <a href="/oracle">Unlock free access →</a>
+    <button class="oracle-banner-close" onclick="document.getElementById('oracle-banner').style.display='none';document.body.classList.remove('has-oracle-banner');" aria-label="Close banner">×</button>
+  </div>
   <!-- ══════════════════════════════════════════════════════════════════════
        LOADING SCREEN
   ══════════════════════════════════════════════════════════════════════ -->
@@ -2426,11 +2431,12 @@
        NAVIGATION
   ══════════════════════════════════════════════════════════════════════ -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
-    <a href="#hero" class="nav-logo" aria-label="Signal - Return to top">SIGNAL<span>.</span></a>
+    <a href="#hero" class="nav-logo" aria-label="Signal by RIG - Return to top">SIGNAL<span class="by-rig"> by RIG</span><span class="dot-logo">.</span></a>
     <ul class="nav-links">
       <li><a href="assessment.html">Assessment</a></li>
       <li><a href="probability.html">Dashboard</a></li>
       <li><a href="coach.html">Coach</a></li>
+      <li><a href="/oracle" style="color: var(--color-teal); font-weight: 600;">Oracle Free</a></li>
       <li><a href="applications.html">Tracker</a></li>
       <li><button class="nav-signin" aria-label="Sign in to your account">Sign In</button></li>
     </ul>
@@ -2440,6 +2446,7 @@
       <span></span>
     </button>
     <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Mobile navigation">
+      <a href="/oracle" style="color: var(--color-teal);">Oracle Free</a>
       <a href="assessment.html">Assessment</a>
       <a href="probability.html">Dashboard</a>
       <a href="coach.html">Coach</a>

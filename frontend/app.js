@@ -1624,6 +1624,70 @@
   });
 
   // ═══════════════════════════════════════════════════════════════════════
+  // 26. ORACLE EMAIL VERIFICATION
+  // ═══════════════════════════════════════════════════════════════════════
+  const OracleVerify = {
+    allowedDomains: ['oracle.com', 'cerner.com', 'netapp.com', 'sun.com', 'mysql.com', 'java.com', 'micros.com'],
+
+    check(email) {
+      if (!email) return { valid: false, message: 'Please enter your email.' };
+      const domain = email.trim().toLowerCase().split('@')[1];
+      if (!domain) return { valid: false, message: 'Please enter a valid email address.' };
+      const isOracle = this.allowedDomains.some(d => domain === d || domain.endsWith('.' + d));
+      if (isOracle) {
+        return { valid: true, message: 'Verified! Welcome aboard.' };
+      }
+      return { valid: false, message: 'This doesn\'t appear to be an Oracle Health email. You can also verify via LinkedIn.' };
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // 27. DIMENSION SCORING
+  // ═══════════════════════════════════════════════════════════════════════
+  const DimensionScoring = {
+    dimensions: {
+      clarity:     { name: 'Career Clarity',      weight: 0.20, questions: [1, 5, 9] },
+      resume:      { name: 'Resume Strength',     weight: 0.25, questions: [2, 11, 4] },
+      linkedin:    { name: 'LinkedIn Presence',   weight: 0.20, questions: [3, 7, 8] },
+      interview:   { name: 'Interview Readiness', weight: 0.15, questions: [6, 12, 13] },
+      positioning: { name: 'Market Positioning',  weight: 0.20, questions: [5, 9, 10, 14] }
+    },
+
+    score(answers) {
+      const results = {};
+      for (const [key, dim] of Object.entries(this.dimensions)) {
+        const vals = dim.questions.map(q => answers[q] || 0).filter(v => v > 0);
+        const avg = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+        results[key] = {
+          name: dim.name,
+          score: Math.round(avg),
+          weight: dim.weight
+        };
+      }
+
+      // Overall score = weighted average
+      let overall = 0;
+      let totalWeight = 0;
+      for (const [key, dim] of Object.entries(this.dimensions)) {
+        if (results[key] && results[key].score > 0) {
+          overall += results[key].score * dim.weight;
+          totalWeight += dim.weight;
+        }
+      }
+      results.overall = totalWeight > 0 ? Math.round(overall / totalWeight) : 0;
+      return results;
+    },
+
+    recommend(results) {
+      const overall = results.overall || 0;
+      if (overall >= 80) return { tier: 'Command', price: '$999', reason: 'Your readiness is strong — polish and launch.' };
+      if (overall >= 60) return { tier: 'Launch', price: '$299', reason: 'Good foundation — accelerate with professional assets.' };
+      if (overall >= 40) return { tier: 'Map', price: '$49', reason: 'Some clarity needed — a roadmap will help you focus.' };
+      return { tier: 'Pulse', price: 'Free', reason: 'Let\'s start by understanding where you stand.' };
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
   // 25. EXPORT
   // ═══════════════════════════════════════════════════════════════════════
   window.SignalV20 = {
@@ -1655,6 +1719,10 @@
     State,
     Format,
     CONFIG,
+
+    // New modules
+    OracleVerify,
+    DimensionScoring,
 
     // Utility
     el,

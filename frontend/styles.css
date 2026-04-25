@@ -34,6 +34,14 @@
   --color-success: #00ff88;
   --color-recovery: #ef4444;
   
+  /* RIG Brand Accents */
+  --color-teal: #00d4aa;
+  --color-teal-dim: rgba(0,212,170,0.12);
+  --color-teal-glow: rgba(0,212,170,0.35);
+  --color-gold: #d4a853;
+  --color-gold-dim: rgba(212,168,83,0.12);
+  --color-gold-glow: rgba(212,168,83,0.35);
+  
   /* Gradient Mesh Backgrounds */
   --mesh-1: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.15) 0%, transparent 50%);
   --mesh-2: radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16,185,129,0.08) 0%, transparent 50%);
@@ -2161,6 +2169,652 @@ select:focus-visible {
   }
 }
 
+/* ==========================================================================
+   ORACLE BANNER
+   ========================================================================== */
+
+.oracle-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  background: linear-gradient(135deg, var(--color-teal) 0%, var(--color-trust) 100%);
+  color: #fff;
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.oracle-banner a {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.oracle-banner a:hover {
+  opacity: 0.85;
+}
+
+.oracle-banner-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.oracle-banner-close:hover {
+  opacity: 1;
+}
+
+body.has-oracle-banner {
+  padding-top: 44px;
+}
+
+body.has-oracle-banner .nav {
+  top: 44px;
+}
+
+/* ==========================================================================
+   PRICING TIERS
+   ========================================================================== */
+
+.pricing-section {
+  padding: 100px 20px;
+  position: relative;
+}
+
+.pricing-section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.pricing-header h2 {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.pricing-header p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .pricing-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pricing-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+  transition: transform 0.3s var(--ease-out), border-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.pricing-card--featured {
+  border-color: var(--color-teal);
+  box-shadow: 0 0 30px var(--color-teal-dim);
+}
+
+.pricing-card--featured::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: 12px;
+  right: -30px;
+  background: var(--color-teal);
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 36px;
+  transform: rotate(45deg);
+}
+
+.pricing-card--oracle-free {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 20px var(--color-gold-dim);
+}
+
+.pricing-tier-name {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.pricing-card--featured .pricing-tier-name {
+  color: var(--color-teal);
+}
+
+.pricing-card--oracle-free .pricing-tier-name {
+  color: var(--color-gold);
+}
+
+.pricing-price {
+  font-size: 40px;
+  font-weight: 800;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  margin-bottom: 4px;
+}
+
+.pricing-price .pricing-period {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.pricing-price-free {
+  color: var(--color-teal);
+}
+
+.pricing-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  min-height: 40px;
+}
+
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  text-align: left;
+}
+
+.pricing-features li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pricing-features li::before {
+  content: '✓';
+  color: var(--color-teal);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.pricing-cta {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.pricing-cta:hover {
+  transform: translateY(-2px);
+}
+
+.pricing-cta--primary {
+  background: linear-gradient(135deg, var(--color-teal), var(--color-trust));
+  color: #fff;
+  box-shadow: 0 4px 16px var(--color-teal-dim);
+}
+
+.pricing-cta--primary:hover {
+  box-shadow: 0 8px 24px var(--color-teal-glow);
+}
+
+.pricing-cta--secondary {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+}
+
+.pricing-cta--secondary:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--glass-border-hover);
+}
+
+.pricing-cta--gold {
+  background: linear-gradient(135deg, var(--color-gold), #e8c36a);
+  color: #000;
+  box-shadow: 0 4px 16px var(--color-gold-dim);
+}
+
+.pricing-cta--gold:hover {
+  box-shadow: 0 8px 24px var(--color-gold-glow);
+}
+
+.pricing-oracle-callout {
+  text-align: center;
+  margin-top: 40px;
+  padding: 24px;
+  background: var(--color-gold-dim);
+  border: 1px solid var(--color-gold);
+  border-radius: 12px;
+}
+
+.pricing-oracle-callout p {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.pricing-oracle-callout strong {
+  color: var(--color-gold);
+}
+
+.pricing-oracle-callout a {
+  color: var(--color-gold);
+  text-decoration: underline;
+}
+
+.pricing-proof {
+  text-align: center;
+  margin-top: 48px;
+}
+
+.pricing-proof h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+}
+
+.pricing-proof-grid {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.pricing-proof-item {
+  text-align: center;
+}
+
+.pricing-proof-number {
+  font-size: 36px;
+  font-weight: 800;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  background: linear-gradient(135deg, var(--color-teal), var(--color-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pricing-proof-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   ORACLE LANDING PAGE
+   ========================================================================== */
+
+.oracle-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 20px 80px;
+  text-align: center;
+}
+
+.oracle-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 30% 40%, rgba(212,168,83,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 70% 60%, rgba(0,212,170,0.08) 0%, transparent 50%);
+  z-index: 0;
+}
+
+.oracle-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+}
+
+.oracle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-gold-dim);
+  border: 1px solid var(--color-gold);
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 32px;
+}
+
+.oracle-hero h1 {
+  font-size: clamp(36px, 7vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.oracle-hero h1 .gradient-text {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.oracle-hero p {
+  font-size: clamp(16px, 2.5vw, 20px);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.oracle-verify {
+  margin: 40px 0;
+ }
+
+.oracle-verify-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.oracle-verify-form {
+  display: flex;
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.oracle-verify-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 14px 18px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: Inter, sans-serif;
+  backdrop-filter: var(--glass-blur);
+}
+
+.oracle-verify-input::placeholder {
+  color: var(--text-muted);
+}
+
+.oracle-verify-input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-dim);
+}
+
+.oracle-verify-input.valid {
+  border-color: var(--color-teal);
+  box-shadow: 0 0 0 3px var(--color-teal-dim);
+}
+
+.oracle-verify-input.invalid {
+  border-color: var(--color-recovery);
+  box-shadow: 0 0 0 3px var(--color-recovery-dim);
+}
+
+.oracle-verify-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--color-gold), #e8c36a);
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.oracle-verify-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--color-gold-glow);
+}
+
+.oracle-verify-msg {
+  font-size: 13px;
+  margin-top: 8px;
+  min-height: 20px;
+}
+
+.oracle-verify-msg.success {
+  color: var(--color-teal);
+}
+
+.oracle-verify-msg.error {
+  color: var(--color-recovery);
+}
+
+.oracle-story {
+  margin: 48px 0;
+  padding: 32px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  text-align: left;
+}
+
+.oracle-story p {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.oracle-story .byline {
+  font-size: 14px;
+  color: var(--color-gold);
+  font-weight: 600;
+  margin-top: 16px;
+}
+
+.oracle-cta-section {
+  margin-top: 40px;
+}
+
+.oracle-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 40px;
+  background: linear-gradient(135deg, var(--color-teal), var(--color-trust));
+  color: #fff;
+  border-radius: 28px;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.3s var(--ease-hope), box-shadow 0.3s;
+}
+
+.oracle-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px var(--color-teal-glow);
+}
+
+.oracle-free-tiers {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.oracle-free-tier {
+  padding: 10px 20px;
+  background: var(--color-teal-dim);
+  border: 1px solid var(--color-teal);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-teal);
+}
+
+/* Dimension breakdown cards */
+.dimension-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 12px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.dimension-card:hover {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-2px);
+}
+
+.dimension-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dimension-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dimension-card-score {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+
+.dimension-card-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.dimension-card-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s var(--ease-out);
+}
+
+.dimension-card-recommendation {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Recommended next step */
+.recommended-next {
+  background: var(--glass-bg);
+  border: 1px solid var(--color-teal);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+  text-align: center;
+}
+
+.recommended-next h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-teal);
+}
+
+.recommended-next p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.recommended-next a {
+  display: inline-block;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--color-teal), var(--color-trust));
+  color: #fff;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.recommended-next a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--color-teal-glow);
+}
+
 /* Print Styles */
 @media print {
   body {
@@ -2188,4 +2842,26 @@ select:focus-visible {
     border: 1px solid black;
     break-inside: avoid;
   }
+}
+
+/* ==========================================================================
+   RIG BRAND ACCENTS
+   ========================================================================== */
+
+.by-rig {
+  font-size: 0.45em;
+  font-weight: 400;
+  color: var(--color-gold);
+  letter-spacing: 0.08em;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+.dot-logo {
+  color: var(--color-teal);
+}
+
+.nav-logo .by-rig {
+  font-size: 0.65em;
+  opacity: 0.8;
 }

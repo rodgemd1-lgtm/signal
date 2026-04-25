@@ -14,6 +14,7 @@
     { "src": "/tracker", "dest": "/frontend/applications.html" },
     { "src": "/styles.css", "dest": "/frontend/styles.css" },
     { "src": "/app.js", "dest": "/frontend/app.js" },
+    { "src": "/oracle", "dest": "/frontend/oracle.html" },
     { "src": "/(.*)", "dest": "/frontend/$1" }
   ]
 }

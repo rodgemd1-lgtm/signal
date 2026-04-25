@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free career intelligence for Oracle Health employees. The same system that took Mike Rodgers from laid off to hired — now working for you.">
+  <meta name="theme-color" content="#0a0a1a">
+  <title>Oracle Health — Signal by RIG</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect fill='%230a0a1a' width='32' height='32' rx='6'/><text x='16' y='22' font-family='system-ui' font-size='18' font-weight='700' fill='%2300d4aa' text-anchor='middle'>S.</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .oracle-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .oracle-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,212,170,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 40% at 20% 80%, rgba(59,130,246,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .oracle-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-teal-dim);
+      border: 1px solid var(--color-teal);
+      color: var(--color-teal);
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .oracle-hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      max-width: 800px;
+    }
+    .oracle-hero h1 .teal { color: var(--color-teal); }
+    .oracle-hero p {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      color: var(--text-secondary);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .oracle-cta-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-teal {
+      background: var(--color-teal);
+      color: #050510;
+      padding: 16px 40px;
+      border-radius: var(--radius-lg);
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s var(--ease-out-expo);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-teal:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--color-teal-glow);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+      padding: 16px 40px;
+      border-radius: var(--radius-lg);
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s var(--ease-out-expo);
+    }
+    .btn-ghost:hover {
+      border-color: var(--color-teal);
+      color: var(--color-teal);
+    }
+    .oracle-section {
+      padding: 96px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .oracle-section h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+    .oracle-section h2 .teal { color: var(--color-teal); }
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+    .benefit-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+    .benefit-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--color-teal);
+      transform: translateY(-4px);
+    }
+    .benefit-card .icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    .benefit-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .benefit-card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .benefit-card .price {
+      color: var(--color-teal);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 12px;
+      display: inline-block;
+      background: var(--color-teal-dim);
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+    .benefit-card .price.strike {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+    }
+    .verify-section {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      text-align: center;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .verify-section h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .verify-section p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .verify-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .verify-form input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      color: var(--text-primary);
+      font-size: 15px;
+      width: 280px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .verify-form input:focus {
+      border-color: var(--color-teal);
+    }
+    .verify-form input::placeholder {
+      color: var(--text-muted);
+    }
+    .verify-result {
+      margin-top: 16px;
+      font-size: 14px;
+      min-height: 24px;
+    }
+    .verify-result.success { color: var(--color-teal); }
+    .verify-result.error { color: var(--color-recovery); }
+    .story-section {
+      background: linear-gradient(180deg, transparent 0%, rgba(0,212,170,0.03) 50%, transparent 100%);
+    }
+    .story-content {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .story-content .quote {
+      font-family: 'Inter', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .story-content .quote .gold { color: var(--color-gold); }
+    .story-content .attribution {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .proof-strip {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 48px 0;
+    }
+    .proof-item {
+      text-align: center;
+    }
+    .proof-item .number {
+      font-family: var(--font-mono);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-teal);
+    }
+    .proof-item .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+    @media (max-width: 640px) {
+      .verify-form { flex-direction: column; align-items: center; }
+      .verify-form input { width: 100%; }
+      .oracle-hero { padding: 60px 20px 40px; }
+      .oracle-section { padding: 64px 20px; }
+      .verify-section { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="logo"><span class="dot"></span> Signal <span class="by-rig">by RIG</span></a>
+      <div class="nav-links">
+        <a href="/assessment">Assessment</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/coach">Coach</a>
+        <a href="/oracle" class="nav-link-active">Oracle</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="oracle-hero">
+    <div class="oracle-badge">✦ Free for Oracle Health Employees</div>
+    <h1>You gave Oracle your best.<br><span class="teal">Let's find what's next.</span></h1>
+    <p>Signal is career intelligence — built by someone who's been where you are. The same system that took Mike Rodgers from laid off to hired is now free for every Oracle Health employee.</p>
+    <div class="oracle-cta-group">
+      <a href="/assessment" class="btn-teal">Start Your Free Assessment →</a>
+      <a href="#verify" class="btn-ghost">Verify Your Oracle Email</a>
+    </div>
+  </section>
+
+  <section class="oracle-section" id="benefits">
+    <h2>What you get, <span class="teal">free</span></h2>
+    <div class="benefit-grid">
+      <div class="benefit-card">
+        <div class="icon">📡</div>
+        <h3>Signal Pulse</h3>
+        <p>15-question career readiness assessment. Get your score across 5 dimensions — clarity, resume, LinkedIn, interview readiness, market positioning.</p>
+        <div class="price strike">$0 value</div> <div class="price">Free forever</div>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">🗺️</div>
+        <h3>Signal Map</h3>
+        <p>Full career roadmap with resume scoring, LinkedIn optimization report, and your personalized positioning statement. The strategic plan you need right now.</p>
+        <div class="price strike">$49 value</div> <div class="price">Free for Oracle</div>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">🚀</div>
+        <h3>Signal Launch</h3>
+        <p>Resume rewrite, LinkedIn overhaul, interview prep briefs, and 30-day strategy. For when you're ready to move fast.</p>
+        <div class="price">$299</div>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">⚡</div>
+        <h3>Signal Command</h3>
+        <p>Your personal brand website (like mikerodgers.tech), 1:1 strategy sessions with Mike, weekly accountability, and salary negotiation playbook.</p>
+        <div class="price">$999</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="oracle-section story-section" id="story">
+    <h2>Built by someone who's <span class="teal">been there</span></h2>
+    <div class="story-content">
+      <div class="proof-strip">
+        <div class="proof-item">
+          <div class="number">$32B</div>
+          <div class="label">Merger Outcome</div>
+        </div>
+        <div class="proof-item">
+          <div class="number">130+</div>
+          <div class="label">AI Agents Deployed</div>
+        </div>
+        <div class="proof-item">
+          <div class="number">$4B+</div>
+          <div class="label">M&A Pipeline</div>
+        </div>
+        <div class="proof-item">
+          <div class="number">7</div>
+          <div class="label">Industries Fixed</div>
+        </div>
+      </div>
+      <p class="quote">"I built this system for myself. When I left Oracle Health, I needed a way to cut through the noise — to find the signal. <span class="gold">Now it's yours.</span>"</p>
+      <p class="attribution">— Mike Rodgers, Founder of RIG</p>
+      <a href="https://mikerodgers.tech" target="_blank" rel="noopener" class="btn-ghost" style="margin-top: 24px;">See the proof → mikerodgers.tech</a>
+    </div>
+  </section>
+
+  <section class="oracle-section" id="verify">
+    <div class="verify-section">
+      <h3>Verify your Oracle email</h3>
+      <p>Use your @oracle.com or @cerner.com email to unlock free access to Signal Pulse and Signal Map. No credit card. No catch.</p>
+      <form class="verify-form" id="oracle-verify-form">
+        <input type="email" id="oracle-email" placeholder="your.name@oracle.com" autocomplete="email">
+        <button type="submit" class="btn-teal" style="padding: 14px 28px;">Verify & Unlock</button>
+      </form>
+      <div class="verify-result" id="verify-result"></div>
+      <p style="color: var(--text-muted); font-size: 12px; margin-top: 16px;">Don't have an Oracle email? <a href="/assessment" style="color: var(--color-teal);">Start the free assessment anyway →</a></p>
+    </div>
+  </section>
+
+  <section class="oracle-section" style="text-align: center;">
+    <h2>Ready to find your <span class="teal">signal</span>?</h2>
+    <div class="oracle-cta-group">
+      <a href="/assessment" class="btn-teal">Start Free Assessment →</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>Signal by RIG — Career Intelligence for Executives</p>
+      <p style="color: var(--text-muted); font-size: 13px;">&copy; 2026 Rodgers Intelligence Group. Built for people between chapters.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Oracle email verification
+    document.getElementById('oracle-verify-form')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('oracle-email').value;
+      const result = window.Signal?.OracleVerify?.check(email) || { valid: false, message: 'Verification unavailable. Please try the free assessment.' };
+      const resultEl = document.getElementById('verify-result');
+      if (result.valid) {
+        resultEl.className = 'verify-result success';
+        resultEl.textContent = result.message + ' Redirecting to assessment...';
+        localStorage.setItem('oracle_verified', 'true');
+        localStorage.setItem('oracle_email', email);
+        setTimeout(() => { window.location.href = '/assessment'; }, 1500);
+      } else {
+        resultEl.className = 'verify-result error';
+        resultEl.textContent = result.message;
+      }
+    });
+
+    // Check if already verified
+    if (localStorage.getItem('oracle_verified') === 'true') {
+      const resultEl = document.getElementById('verify-result');
+      resultEl.className = 'verify-result success';
+      resultEl.textContent = '✓ Already verified! Welcome back.';
+    }
+  </script>
+</body>
+</html>
