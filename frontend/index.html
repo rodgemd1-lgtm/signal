@@ -2455,6 +2455,13 @@
     </div>
   </nav>
 
+  <!-- Oracle Health Banner -->
+  <div class="oracle-banner" id="oracleBanner">
+    <span>Free career intelligence for Oracle Health employees. No strings attached.</span>
+    <a href="/oracle">See if you qualify →</a>
+    <button class="oracle-banner-close" onclick="document.getElementById('oracleBanner').style.display='none';document.body.classList.remove('has-oracle-banner');" aria-label="Close banner">×</button>
+  </div>
+
   <!-- ══════════════════════════════════════════════════════════════════════
        MAIN CONTENT
   ══════════════════════════════════════════════════════════════════════ -->
@@ -2502,7 +2509,7 @@
           <span class="word">a</span>
           <span class="word">direction.</span>
         </h2>
-        <p class="hero-sub">Career intelligence for $97/month. We help you see it.</p>
+        <p class="hero-sub">Career intelligence that shows you where you stand — and where you could go.</p>
         <a href="assessment.html" class="hero-cta" aria-label="Begin your career assessment">
           Let's begin
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -3059,6 +3066,115 @@
       </div>
     </section>
 
+    <!-- PRICING -->
+    <section class="pricing-section" id="pricing" aria-labelledby="pricing-title">
+      <div class="pricing-section-inner">
+        <div class="pricing-header">
+          <div class="section-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Pricing
+          </div>
+          <h2 class="section-title" id="pricing-title">Choose your level of intelligence</h2>
+          <p>From a free scorecard to full operator treatment. Start wherever you are.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Pulse -->
+          <div class="pricing-card">
+            <div class="pricing-tier-name">Pulse</div>
+            <div class="pricing-price pricing-price-free">Free</div>
+            <div class="pricing-desc">See where you stand</div>
+            <ul class="pricing-features">
+              <li>15-question career assessment</li>
+              <li>Dimension scorecard (5 areas)</li>
+              <li>Overall readiness score</li>
+              <li>Recommended next step</li>
+            </ul>
+            <a href="assessment.html" class="pricing-cta pricing-cta--secondary">Start free</a>
+          </div>
+
+          <!-- Map -->
+          <div class="pricing-card">
+            <div class="pricing-tier-name">Map</div>
+            <div class="pricing-price">$49</div>
+            <div class="pricing-desc">Find your direction</div>
+            <ul class="pricing-features">
+              <li>Everything in Pulse</li>
+              <li>Career roadmap</li>
+              <li>Resume strength score</li>
+              <li>LinkedIn profile audit</li>
+            </ul>
+            <a href="assessment.html" class="pricing-cta pricing-cta--secondary">Get Map</a>
+          </div>
+
+          <!-- Launch -->
+          <div class="pricing-card pricing-card--featured">
+            <div class="pricing-tier-name">Launch</div>
+            <div class="pricing-price">$299</div>
+            <div class="pricing-desc">Accelerate your transition</div>
+            <ul class="pricing-features">
+              <li>Everything in Map</li>
+              <li>Professional resume rewrite</li>
+              <li>LinkedIn profile overhaul</li>
+              <li>Interview prep coaching</li>
+            </ul>
+            <a href="assessment.html" class="pricing-cta pricing-cta--primary">Get Launch</a>
+          </div>
+
+          <!-- Command -->
+          <div class="pricing-card">
+            <div class="pricing-tier-name">Command</div>
+            <div class="pricing-price">$999</div>
+            <div class="pricing-desc">Own your market position</div>
+            <ul class="pricing-features">
+              <li>Everything in Launch</li>
+              <li>Personal brand site</li>
+              <li>1:1 session with Mike</li>
+              <li>Weekly accountability</li>
+            </ul>
+            <a href="assessment.html" class="pricing-cta pricing-cta--secondary">Get Command</a>
+          </div>
+
+          <!-- Executive -->
+          <div class="pricing-card">
+            <div class="pricing-tier-name">Executive</div>
+            <div class="pricing-price">$2,500</div>
+            <div class="pricing-desc">Full operator treatment</div>
+            <ul class="pricing-features">
+              <li>Everything in Command</li>
+              <li>Full executive positioning</li>
+              <li>Ongoing 1:1 advisory</li>
+              <li>Network warm intros</li>
+            </ul>
+            <a href="assessment.html" class="pricing-cta pricing-cta--gold">Get Executive</a>
+          </div>
+        </div>
+
+        <div class="pricing-oracle-callout">
+          <p><strong>Oracle Health employees:</strong> Pulse + Map tiers are free. <a href="/oracle">Verify your eligibility →</a></p>
+        </div>
+
+        <div class="pricing-proof">
+          <h3>The proof — this is what Signal built for its creator</h3>
+          <div class="pricing-proof-grid">
+            <div class="pricing-proof-item">
+              <div class="pricing-proof-number">$32B</div>
+              <div class="pricing-proof-label">Merger navigated</div>
+            </div>
+            <div class="pricing-proof-item">
+              <div class="pricing-proof-number">130+</div>
+              <div class="pricing-proof-label">AI agents deployed</div>
+            </div>
+            <div class="pricing-proof-item">
+              <div class="pricing-proof-number">7</div>
+              <div class="pricing-proof-label">Industries served</div>
+            </div>
+          </div>
+          <p style="margin-top:20px;font-size:14px;color:var(--text-muted)"><a href="https://mikerodgers.tech" target="_blank" rel="noopener" style="color:var(--color-gold);text-decoration:underline">See the proof at mikerodgers.tech →</a></p>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA -->
     <section class="section section--cta" id="cta" aria-labelledby="cta-title">
       <div class="cta-card">
@@ -3090,7 +3206,7 @@
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-brand">
-          <div class="footer-logo">SIGNAL<span>.</span></div>
+          <div class="footer-logo">SIGNAL<span>.</span> <span style="font-size:0.5em;color:var(--color-gold);font-weight:500">by RIG</span></div>
           <div class="footer-tagline">Your career intelligence.</div>
           <div class="footer-meta">Built with hope in San Francisco.</div>
         </div>
